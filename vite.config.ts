@@ -16,5 +16,8 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['tests/**/*.test.ts'],
     setupFiles: ['tests/setup.ts'],
+    env: {
+      VITE_API_URL: process.env.VITE_API_URL ?? 'http://localhost:3000/v1',
+    },
   },
 });
