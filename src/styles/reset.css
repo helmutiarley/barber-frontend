@@ -1,0 +1,107 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--b-fg-neutral-default, #1a1a1a);
+  background: var(--b-bg-neutral-default, #fff);
+}
+
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  appearance: none;
+  -moz-appearance: none;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+input {
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+
+  &::-ms-clear,
+  &::-ms-reveal {
+    display: none;
+  }
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+select {
+  &::-ms-expand {
+    display: none;
+  }
+}
+
+textarea {
+  resize: none;
+  overflow: auto;
+}
+
+input[type='checkbox'] {
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  cursor: pointer;
+  transform: translateX(0);
+}
+
+label {
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

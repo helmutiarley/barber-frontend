@@ -1,0 +1,28 @@
+/**
+ * Shell chrome variables. Everything else should come from the bComponents
+ * `--b-*` design tokens rather than being redefined here.
+ */
+:root {
+  --header-height: 72px;
+  --header-height-mobile: 56px;
+  --drawer-width: 260px;
+  --page-max-width: 1024px;
+}
+
+@media (max-width: 959px) {
+  :root {
+    --header-height: var(--header-height-mobile);
+  }
+}
+
+/* The shell owns scrolling: only the content region scrolls, never the page. */
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+  font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
