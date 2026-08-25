@@ -5,7 +5,7 @@ on:
   workflow_call:
 
 jobs:
-  test:
+  ci:
     runs-on: ubuntu-latest
     env:
       VITE_API_URL: /v1
