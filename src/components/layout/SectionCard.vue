@@ -36,7 +36,8 @@ const slots = useSlots();
 
 <style scoped>
 .section-card {
-  background: var(--b-bg-neutral-default);
+  --b-card-bg: var(--b-bg-neutral-default);
+  --b-card-header-bg: var(--b-bg-neutral-default);
 }
 
 .section-card__header {
