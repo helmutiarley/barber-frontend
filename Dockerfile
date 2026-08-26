@@ -3,12 +3,10 @@ FROM node:22-bookworm-slim AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY packages ./packages
 RUN npm ci
 
 COPY index.html vite.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json ./
 COPY src ./src
-COPY scripts ./scripts
 
 ARG VITE_API_URL=/v1
 ARG VITE_SHOP_TIMEZONE=America/Sao_Paulo
