@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BEmptyState, BSkeletonLoader } from '@barber/bcomponents';
+import { BEmptyState, BSkeletonLoader } from '@/ui';
 import { onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import PageLayout from '@/components/layout/PageLayout.vue';

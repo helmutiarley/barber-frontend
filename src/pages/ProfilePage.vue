@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BButton, BInput, BInputArea, BSkeletonLoader, useBToast } from '@barber/bcomponents';
+import { BButton, BInput, BInputArea, BSkeletonLoader, useBToast } from '@/ui';
 import { useQuery } from '@tanstack/vue-query';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { getMe } from '@/api/auth';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BButton, BInput, BText, useBToast } from '@barber/bcomponents';
+import { BButton, BInput, BText, useBToast } from '@/ui';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { openSession } from '@/api/cash-register';

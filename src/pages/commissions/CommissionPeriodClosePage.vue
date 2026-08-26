@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BButton, BSelect, BText, useBToast } from '@barber/bcomponents';
+import { BButton, BSelect, BText, useBToast } from '@/ui';
 import { useQueryClient } from '@tanstack/vue-query';
 import { DateTime } from 'luxon';
 import { computed, reactive, ref } from 'vue';

@@ -5,7 +5,7 @@ import {
   BLabel,
   BSkeletonLoader,
   BText,
-} from '@barber/bcomponents';
+} from '@/ui';
 import { useQuery } from '@tanstack/vue-query';
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

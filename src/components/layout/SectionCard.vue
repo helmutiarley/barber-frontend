@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BCard, BText } from '@barber/bcomponents';
+import { BCard, BText } from '@/ui';
 import { useSlots } from 'vue';
 
 withDefaults(defineProps<{ title?: string; subtitle?: string }>(), {

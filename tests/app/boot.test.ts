@@ -2,11 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createBarberApp } from '@/app/create-app';
 import { router } from '@/app/router';
 
-/**
- * bComponents is a vendored, minified bundle that we rewrite identifiers in, so a
- * bad rewrite can produce a bundle that imports and type-checks but throws on
- * render (leaving a blank page). Mounting the real app guards against that.
- */
 describe('app boot', () => {
   let warnings: string[] = [];
   let warnSpy: ReturnType<typeof vi.spyOn>;
@@ -44,7 +39,7 @@ describe('app boot', () => {
     app.unmount();
   });
 
-  it('registers the directives bComponents renders with', async () => {
+  it('resolves every UI kit component the login screen renders', async () => {
     const app = createBarberApp();
     app.use(router);
 
@@ -56,7 +51,7 @@ describe('app boot', () => {
     app.mount(host);
     await vi.waitFor(() => expect(host.querySelector('form')).not.toBeNull());
 
-    expect(warnings.filter((line) => line.includes('Failed to resolve directive'))).toEqual([]);
+    expect(warnings.filter((line) => line.includes('Failed to resolve'))).toEqual([]);
 
     app.unmount();
   });

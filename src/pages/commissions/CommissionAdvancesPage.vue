@@ -11,7 +11,7 @@ import {
   BSkeletonLoader,
   BText,
   useBToast,
-} from '@barber/bcomponents';
+} from '@/ui';
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
 import { DateTime } from 'luxon';
 import { computed, onMounted, reactive, ref } from 'vue';

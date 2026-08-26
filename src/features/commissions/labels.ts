@@ -4,6 +4,7 @@ import type {
   CommissionPeriodStatus,
   CommissionRuleDto,
 } from '@/api/types';
+import type { BLabelColor } from '@/ui';
 
 export const COMMISSION_BASE_LABELS: Record<CommissionBase, string> = {
   gross: 'Bruto',
@@ -43,7 +44,7 @@ export const PERIOD_STATUS_LABELS: Record<CommissionPeriodStatus, string> = {
   paid: 'Pago',
 };
 
-export const PERIOD_STATUS_COLORS: Record<CommissionPeriodStatus, string> = {
+export const PERIOD_STATUS_COLORS: Record<CommissionPeriodStatus, BLabelColor> = {
   closed: 'warning',
   paid: 'success',
 };

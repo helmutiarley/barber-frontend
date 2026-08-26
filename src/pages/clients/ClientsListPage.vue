@@ -8,7 +8,7 @@ import {
   BSelect,
   BSkeletonLoader,
   BText,
-} from '@barber/bcomponents';
+} from '@/ui';
 import { useQuery } from '@tanstack/vue-query';
 import { DateTime } from 'luxon';
 import { computed, ref, watch } from 'vue';

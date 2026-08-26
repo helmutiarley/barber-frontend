@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BDivider, BIcon, BIconButton, BText } from '@barber/bcomponents';
+import { BDivider, BIcon, BIconButton, BText } from '@/ui';
 import { computed } from 'vue';
 import { staffBottomNavItems, staffNavSections } from '@/app/nav';
 import AppNavItem from '@/components/layout/AppNavItem.vue';

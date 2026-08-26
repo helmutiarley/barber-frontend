@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BButton, BEmptyState } from '@barber/bcomponents';
+import { BButton, BEmptyState } from '@/ui';
 import { useRouter } from 'vue-router';
 import PageLayout from '@/components/layout/PageLayout.vue';
 

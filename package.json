@@ -2,16 +2,12 @@
   "name": "barber-frontend",
   "private": true,
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
   "scripts": {
     "dev": "vite",
-    "vendor:bcomponents": "node scripts/vendor-bcomponents.mjs",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "vue-tsc -b --noEmit",
@@ -19,8 +15,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@barber/bcomponents": "*",
-    "@barber/bcomponents-icons": "*",
     "@tanstack/vue-query": "^5.74.4",
     "js-cookie": "^3.0.5",
     "luxon": "^3.6.1",

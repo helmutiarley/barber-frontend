@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BIcon, BText } from '@barber/bcomponents';
+import { BIcon, BText } from '@/ui';
 import { computed } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import type { NavItem } from '@/app/nav';

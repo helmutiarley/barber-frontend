@@ -1,16 +1,10 @@
-import { setupBComponents } from '@barber/bcomponents';
-import { sprites } from '@barber/bcomponents-icons';
 import { configureApiClient } from '@/api/client';
 import { createBarberApp } from '@/app/create-app';
 import { router } from '@/app/router';
 import { useAuthStore } from '@/stores/auth';
+import '@/ui/tokens.css';
 import '@/styles/reset.css';
 import '@/styles/app.css';
-
-setupBComponents({
-  theme: { mode: 'light', theme: 'base' },
-  iconSprites: sprites,
-});
 
 async function bootstrap(): Promise<void> {
   const app = createBarberApp();

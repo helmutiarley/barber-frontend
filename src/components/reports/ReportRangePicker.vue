@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BButton, BCard, BText } from '@barber/bcomponents';
+import { BButton, BCard, BText } from '@/ui';
 import { computed } from 'vue';
 import {
   formatRange,

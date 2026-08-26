@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BCircleLoader, BText } from '@barber/bcomponents';
+import { BCircleLoader, BText } from '@/ui';
 import { useSlots } from 'vue';
 
 withDefaults(

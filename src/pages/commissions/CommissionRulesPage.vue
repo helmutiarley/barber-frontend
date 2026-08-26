@@ -9,7 +9,7 @@ import {
   BSkeletonLoader,
   BText,
   useBToast,
-} from '@barber/bcomponents';
+} from '@/ui';
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
 import { computed, reactive, ref } from 'vue';
 import { listBarbers } from '@/api/barbers';

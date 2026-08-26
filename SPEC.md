@@ -12,7 +12,7 @@
 | Routing       | Vue Router 4                                                           |
 | Server state  | TanStack Query (Vue Query) — fetches, cache, mutations                 |
 | Client state  | Pinia — auth session, UI prefs, cash-register banner, theme            |
-| UI kit        | `@barber/bcomponents` + `@barber/bcomponents-icons` (vendored)         |
+| UI kit        | In-house — `src/ui` (B* components, `--b-*` tokens, icon set)          |
 | Forms         | vee-validate + Zod (same shapes as backend schemas where practical)    |
 | HTTP          | `fetch` wrapper (`src/lib/api.ts`) — no axios                          |
 | Tests         | Vitest + Vue Test Utils + Testing Library                              |
@@ -66,15 +66,12 @@ src/
 ├── api/                    # one file per backend module + client
 ├── features/               # module UI + composables
 ├── pages/                  # route-level SFCs
-├── components/             # shared app chrome (not bComponents)
+├── components/             # shared app chrome (not the UI kit)
 ├── composables/            # cross-module hooks (useMoney, useShopTime)
 ├── stores/                 # Pinia: auth, ui, cashRegister
 ├── lib/                    # api client, money, dates, constants
-└── styles/                 # reset + tokens overrides if any
-
-packages/
-├── bcomponents/            # vendored UI kit
-└── bcomponents-icons/
+├── styles/                 # reset + app shell variables
+└── ui/                     # in-house UI kit (B* components, tokens, icons)
 ```
 
 Tests mirror `src/` under `tests/` (or co-located `*.spec.ts` — pick one and stick to it; default: `tests/` mirroring backend).
@@ -91,13 +88,14 @@ Each module has a spec in [`specs/`](./specs/) (`specs/NN-<module>.md`). Foundat
 - Access token in memory (Pinia); refresh token in `httpOnly` is **not** available from a pure SPA — store refresh in `localStorage` (acceptable for this internal tool) or a secure cookie set by a BFF later. Refresh on 401 once, then logout.
 - Identity for API calls comes only from the Bearer token. Never put `userId` / `role` in mutation bodies unless the backend schema explicitly allows a staff-supplied `clientId`.
 
-## 5. UI Kit (bComponents)
+## 5. UI Kit (`src/ui`)
 
-- Initialize once in `main.ts` via `setupBComponents({ theme, iconSprites })`.
-- Prefer kit primitives: `BButton`, `BInput`, `BSelect`, `BDialog`, `BDrawer`/`BBottomSheet`, `BDataTable`, `BToast` + `useBToast`, `BChip`, `BCard`, `BTabs`, `BDatePicker` / time panels, `BEmptyState`, `BSkeletonLoader`, `BIcon`.
-- Do not re-implement buttons/inputs. App-specific composites (agenda grid, payment splitter) live in `features/` and compose bComponents.
-- Toasts for success/failure of mutations; inline `BSnackbar` / field errors for form validation.
-- Light theme `base` by default; dark mode optional via `useTheme` — not required for v1.
+- In-house and dependency-free. `main.ts` only imports `@/ui/tokens.css`; there is no setup call.
+- Prefer kit primitives: `BButton`, `BInput`, `BInputArea`, `BSelect`, `BCheckbox`, `BSwitch`, `BDialog`, `BToast` + `useBToast`, `BLabel`, `BCard`, `BTabs`, `BSegmentedControl`, `BEmptyState`, `BSkeletonLoader`, `BCircleLoader`, `BIcon`, `BIconButton`, `BText`, `BDivider`.
+- Do not re-implement buttons/inputs. App-specific composites (agenda grid, payment splitter) live in `features/` and compose the kit.
+- Extending the kit means adding a component under `src/ui/components` and exporting it from the barrel; mirror the change into barber-crm's copy.
+- Style with `--b-*` tokens only — no raw hex outside `src/ui/tokens.css`.
+- Toasts for success/failure of mutations; `helper-text` carries field-level validation errors.
 
 ## 6. Data Fetching
 
@@ -147,7 +145,7 @@ Nav items are role-filtered. CLIENT never sees cash, expenses, or staff admin.
 2. API module function(s) + query/mutation hooks.
 3. Loading / empty / error states.
 4. Actions hidden or disabled per role; server errors mapped to toast/inline copy.
-5. Uses bComponents for kit-level UI.
+5. Uses `src/ui` for kit-level UI.
 6. Spec status updated when the slice ships.
 
 ## 12. Out of Scope (frontend v1)

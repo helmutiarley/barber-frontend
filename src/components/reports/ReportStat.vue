@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BCard, BText } from '@barber/bcomponents';
+import { BCard, BText } from '@/ui';
 
 withDefaults(
   defineProps<{

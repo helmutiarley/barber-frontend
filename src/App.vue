@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BToast } from '@barber/bcomponents';
+import { BToast } from '@/ui';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import AppLayout from '@/layouts/AppLayout.vue';

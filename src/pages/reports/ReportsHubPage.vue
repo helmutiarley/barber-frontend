@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BCard, BIcon, BText } from '@barber/bcomponents';
+import { BCard, BIcon, BText } from '@/ui';
 import { RouterLink } from 'vue-router';
 import PageLayout from '@/components/layout/PageLayout.vue';
 import { REPORT_CARDS } from '@/features/reports/labels';

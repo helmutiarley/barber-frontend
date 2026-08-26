@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BButton, BIcon, BText } from '@barber/bcomponents';
+import { BButton, BIcon, BText } from '@/ui';
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useCashRegisterStore } from '@/stores/cash-register';

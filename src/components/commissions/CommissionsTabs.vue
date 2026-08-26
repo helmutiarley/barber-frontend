@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BTabs } from '@barber/bcomponents';
+import { BTabs } from '@/ui';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 

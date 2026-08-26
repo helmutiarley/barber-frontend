@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BButton, BInput, useBToast } from '@barber/bcomponents';
+import { BButton, BInput, useBToast } from '@/ui';
 import { reactive, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { ApiError, messageForApiError } from '@/lib/errors';

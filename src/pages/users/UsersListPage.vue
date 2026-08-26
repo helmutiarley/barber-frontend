@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BButton, BCard, BEmptyState, BLabel, BSelect, BSkeletonLoader } from '@barber/bcomponents';
+import { BButton, BCard, BEmptyState, BLabel, BSelect, BSkeletonLoader } from '@/ui';
 import { useQuery } from '@tanstack/vue-query';
 import { computed } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';

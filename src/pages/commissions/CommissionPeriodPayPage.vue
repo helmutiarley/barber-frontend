@@ -6,7 +6,7 @@ import {
   BSkeletonLoader,
   BText,
   useBToast,
-} from '@barber/bcomponents';
+} from '@/ui';
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
