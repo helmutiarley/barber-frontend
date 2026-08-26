@@ -1,6 +1,6 @@
 # Barbershop Frontend — Architecture Spec
 
-> Living document. Read this before any Vue work. Domain scope lives in the backend’s `barbershop-app-summary.md`; API contracts live in `barber-backend/specs/`. This file defines **how** the SPA is built.
+> Living document. Read this before any Vue work. This file defines **how** the SPA is built.
 
 ## 1. Stack
 
