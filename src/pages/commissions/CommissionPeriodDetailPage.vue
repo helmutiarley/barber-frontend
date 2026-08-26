@@ -242,7 +242,7 @@ function formatDate(value: string): string {
 }
 
 .statement__negative {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 
 .statement__summary {
@@ -292,7 +292,7 @@ function formatDate(value: string): string {
 .statement__table td {
   padding: 0.65rem 0.5rem;
   text-align: left;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
   vertical-align: middle;
 }
 
@@ -303,7 +303,7 @@ function formatDate(value: string): string {
 }
 
 .statement__link {
-  color: var(--b-fg-primary-default, #2563eb);
+  color: var(--b-fg-brand-default, #2563eb);
   text-decoration: underline;
 }
 </style>

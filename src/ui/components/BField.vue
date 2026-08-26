@@ -36,19 +36,22 @@ withDefaults(
 .b-field {
   display: flex;
   flex-direction: column;
-  gap: var(--b-spacing-3xs);
+  gap: var(--b-spacing-2xs);
+  width: 100%;
   min-width: 0;
 }
 
 .b-field__label {
   display: inline-flex;
-  align-items: baseline;
-  gap: var(--b-spacing-4xs);
+  align-items: center;
+  gap: var(--b-spacing-3xs);
+  padding-left: 2px;
+  color: var(--b-input-label-color);
   font-family: var(--b-font-family);
-  font-size: var(--b-font-size-body-3);
-  line-height: var(--b-line-height-body-3);
-  font-weight: var(--b-font-weight-medium);
-  color: var(--b-fg-neutral-default);
+  font-size: var(--b-font-size-body-2);
+  line-height: var(--b-line-height-body-2);
+  font-weight: var(--b-font-weight-body-2);
+  letter-spacing: var(--b-letter-spacing-body-2);
 }
 
 .b-field__asterisk {
@@ -56,15 +59,17 @@ withDefaults(
 }
 
 .b-field__optional {
-  font-weight: var(--b-font-weight-regular);
-  color: var(--b-fg-neutral-secondary);
+  color: var(--b-input-label-optional-color);
 }
 
 .b-field__helper {
   margin: 0;
+  padding-left: 2px;
+  color: var(--b-input-helper-text-error-color);
   font-family: var(--b-font-family);
-  font-size: var(--b-font-size-body-3);
-  line-height: var(--b-line-height-body-3);
-  color: var(--b-fg-danger-default);
+  font-size: var(--b-font-size-caption);
+  line-height: var(--b-line-height-caption);
+  font-weight: var(--b-font-weight-caption);
+  letter-spacing: var(--b-letter-spacing-caption);
 }
 </style>

@@ -186,7 +186,7 @@ const movements = computed(() => detailQuery.data.value?.movements ?? []);
 .detail__ledger td {
   padding: 0.65rem 0.5rem;
   text-align: left;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
   vertical-align: middle;
 }
 

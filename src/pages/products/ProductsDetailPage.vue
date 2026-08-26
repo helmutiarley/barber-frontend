@@ -331,7 +331,7 @@ async function confirmDeactivate(): Promise<void> {
 }
 
 .product__error {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
   margin-bottom: 0.75rem;
 }
 </style>

@@ -87,12 +87,18 @@ watch(
           :style="{ width }"
         >
           <header v-if="titleText" class="b-dialog__header">
-            <BText :id="titleId" as="h2" variant="heading-3">{{ titleText }}</BText>
+            <div class="b-dialog__header-content">
+              <BText :id="titleId" as="h2" variant="heading-3" class="b-dialog__header-title">
+                {{ titleText }}
+              </BText>
 
-            <BIconButton icon="ic-close-16" icon-description="Fechar" @click="close" />
+              <div class="b-dialog__header-append">
+                <BIconButton icon="ic-close-16" icon-description="Fechar" @click="close" />
+              </div>
+            </div>
           </header>
 
-          <div class="b-dialog__body">
+          <div class="b-dialog__content">
             <slot />
           </div>
 
@@ -109,17 +115,18 @@ watch(
 .b-dialog {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: var(--b-z-index-modal);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--b-spacing-sm);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .b-dialog__backdrop {
   position: absolute;
   inset: 0;
-  background: var(--b-color-dark-a50);
+  background-color: var(--b-dialog-backdrop-bg);
 }
 
 .b-dialog__panel {
@@ -128,9 +135,11 @@ watch(
   flex-direction: column;
   max-width: 100%;
   max-height: calc(100vh - 2 * var(--b-spacing-sm));
-  background: var(--b-bg-neutral-default);
   border-radius: var(--b-border-radius-lg);
-  box-shadow: var(--b-shadow-2-bottom);
+  background-color: var(--b-dialog-bg);
+  box-shadow:
+    0 0 0 1px var(--b-dialog-border-color),
+    var(--b-dialog-shadow);
   overflow: hidden;
 }
 
@@ -139,38 +148,73 @@ watch(
 }
 
 .b-dialog__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--b-spacing-2xs);
-  padding: var(--b-spacing-md) var(--b-spacing-md) var(--b-spacing-2xs);
+  flex-shrink: 0;
+  padding: var(--b-spacing-xs) var(--b-spacing-sm);
+  border-bottom: 1px solid var(--b-dialog-stroke-color);
 }
 
-.b-dialog__body {
-  padding: var(--b-spacing-2xs) var(--b-spacing-md) var(--b-spacing-md);
+.b-dialog__header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--b-spacing-2xs);
+  min-height: 36px;
+}
+
+.b-dialog__header-title {
+  flex: 1;
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.b-dialog__header-append {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.b-dialog__content {
+  flex: auto;
+  padding: var(--b-spacing-sm);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  color: var(--b-fg-neutral-default);
   font-family: var(--b-font-family);
   font-size: var(--b-font-size-body-2);
   line-height: var(--b-line-height-body-2);
-  color: var(--b-fg-neutral-default);
 }
 
 .b-dialog__footer {
   display: flex;
   flex-wrap: wrap;
+  flex-shrink: 0;
   justify-content: flex-end;
-  gap: var(--b-spacing-2xs);
-  padding: var(--b-spacing-xs) var(--b-spacing-md) var(--b-spacing-md);
-  border-top: 1px solid var(--b-stroke-default);
+  gap: var(--b-spacing-sm);
+  padding: var(--b-spacing-xs) var(--b-spacing-sm);
+  border-top: 1px solid var(--b-dialog-stroke-color);
 }
 
 .b-dialog-enter-active,
 .b-dialog-leave-active {
-  transition: opacity var(--b-transition);
+  transition:
+    opacity 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .b-dialog-enter-from,
 .b-dialog-leave-to {
   opacity: 0;
+}
+
+.b-dialog-enter-from .b-dialog__panel {
+  transform: translateY(100px);
+}
+
+.b-dialog-leave-to .b-dialog__panel {
+  transform: translateY(40px);
 }
 </style>

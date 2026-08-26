@@ -14,12 +14,12 @@ const emit = defineEmits<{ 'update:modelValue': [string] }>();
 </script>
 
 <template>
-  <div class="b-segmented" role="radiogroup" :aria-label="ariaLabel">
+  <div class="b-segmented-control" role="radiogroup" :aria-label="ariaLabel">
     <button
       v-for="segment in segments"
       :key="segment.id"
-      class="b-segmented__item"
-      :class="{ 'b-segmented__item--active': segment.id === modelValue }"
+      class="b-segmented-control__segment"
+      :class="{ 'b-segmented-control__segment--active': segment.id === modelValue }"
       type="button"
       role="radio"
       :aria-checked="segment.id === modelValue"
@@ -31,43 +31,52 @@ const emit = defineEmits<{ 'update:modelValue': [string] }>();
 </template>
 
 <style scoped>
-.b-segmented {
-  display: inline-flex;
-  gap: var(--b-spacing-4xs);
-  padding: var(--b-spacing-4xs);
-  background: var(--b-bg-neutral-secondary);
-  border-radius: var(--b-border-radius-sm);
+.b-segmented-control {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  padding: 2px;
+  border-radius: var(--b-border-radius-2xl);
+  background-color: var(--b-segmented-control-bg);
+  touch-action: none;
+  user-select: none;
 }
 
-.b-segmented__item {
-  padding: var(--b-spacing-3xs) var(--b-spacing-xs);
-  min-height: 32px;
-  border: 0;
-  border-radius: var(--b-border-radius-xs);
-  background: transparent;
-  color: var(--b-fg-neutral-secondary);
+.b-segmented-control__segment {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: var(--b-spacing-2xs) var(--b-spacing-sm);
+  border: none;
+  border-radius: var(--b-border-radius-2xl);
+  background: none;
+  color: var(--b-segmented-control-segment-color);
   font-family: var(--b-font-family);
   font-size: var(--b-font-size-body-2);
   line-height: var(--b-line-height-body-2);
-  font-weight: var(--b-font-weight-medium);
+  font-weight: var(--b-font-weight-body-2);
+  letter-spacing: var(--b-letter-spacing-body-2);
+  user-select: none;
   cursor: pointer;
-  transition:
-    background-color var(--b-transition),
-    color var(--b-transition);
+  transition: color 0.2s ease-in-out;
 }
 
-.b-segmented__item:hover {
-  color: var(--b-fg-neutral-default);
+.b-segmented-control__segment:hover:not(.b-segmented-control__segment--active) {
+  color: var(--b-segmented-control-segment-hover-color);
 }
 
-.b-segmented__item--active {
-  background: var(--b-bg-neutral-default);
-  color: var(--b-fg-neutral-default);
-  box-shadow: var(--b-shadow-1-bottom);
+.b-segmented-control__segment:focus-visible {
+  outline: none;
+  box-shadow: var(--b-segmented-control-segment-focus-shadow);
 }
 
-.b-segmented__item:focus-visible {
-  outline: 2px solid var(--b-fg-brand-default);
-  outline-offset: 1px;
+.b-segmented-control__segment--active {
+  background: var(--b-segmented-control-segment-active-bg);
+  box-shadow: var(--b-segmented-control-segment-active-shadow);
+  color: var(--b-segmented-control-segment-active-color);
 }
 </style>

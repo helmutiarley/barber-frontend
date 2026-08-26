@@ -195,7 +195,7 @@ const newShare = computed(() =>
 }
 
 .clients__link {
-  color: var(--b-fg-primary-default, #2563eb);
+  color: var(--b-fg-brand-default, #2563eb);
   text-decoration: underline;
 }
 </style>

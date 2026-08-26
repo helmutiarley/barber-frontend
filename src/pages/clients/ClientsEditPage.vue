@@ -153,7 +153,7 @@ async function onSubmit(): Promise<void> {
 }
 
 .edit__error {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 
 .edit__actions {

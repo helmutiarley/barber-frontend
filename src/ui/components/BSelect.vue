@@ -73,40 +73,50 @@ function onChange(event: Event): void {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
+  height: 40px;
+  border-radius: var(--b-border-radius-md);
+  background-color: var(--b-border-background-color);
+  box-shadow: 0 0 0 1px var(--b-border-border-color);
+}
+
+.b-select:focus-within {
+  box-shadow: 0 0 0 2px var(--b-border-focus-color);
+}
+
+.b-select--disabled {
+  background-color: var(--b-border-disabled-background-color);
+  box-shadow: 0 0 0 1px var(--b-border-disabled-color);
+  cursor: not-allowed;
 }
 
 .b-select__control {
   width: 100%;
-  padding: var(--b-spacing-2xs) var(--b-spacing-xl) var(--b-spacing-2xs) var(--b-spacing-xs);
-  min-height: 40px;
+  height: 100%;
+  padding-inline: var(--b-spacing-xs) var(--b-spacing-xl);
   appearance: none;
-  background: var(--b-bg-neutral-default);
-  border: 1px solid var(--b-border-neutral-secondary);
-  border-radius: var(--b-border-radius-sm);
-  color: var(--b-fg-neutral-default);
-  font-family: var(--b-font-family);
-  font-size: var(--b-font-size-body-2);
-  line-height: var(--b-line-height-body-2);
-  cursor: pointer;
-  transition:
-    border-color var(--b-transition),
-    box-shadow var(--b-transition);
-}
-
-.b-select__control:focus {
+  border: none;
+  border-radius: var(--b-border-radius-md);
   outline: none;
-  border-color: var(--b-color-brand-500);
-  box-shadow: 0 0 0 3px var(--b-color-brand-50);
+  background: none;
+  color: var(--b-input-color);
+  font-family: var(--b-font-family);
+  font-size: var(--b-input-font-size);
+  line-height: var(--b-input-line-height);
+  font-weight: var(--b-input-font-weight);
+  letter-spacing: var(--b-input-letter-spacing);
+  text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .b-select__control:disabled {
-  background: var(--b-bg-neutral-secondary);
-  color: var(--b-fg-neutral-secondary);
+  color: var(--b-input-disabled-color);
   cursor: not-allowed;
 }
 
-.b-select__control--invalid {
-  border-color: var(--b-border-danger-default);
+.b-select:has(.b-select__control--invalid),
+.b-select:has(.b-select__control--invalid):focus-within {
+  box-shadow: 0 0 0 2px var(--b-border-error-color);
 }
 
 .b-select__caret {
@@ -118,6 +128,6 @@ function onChange(event: Event): void {
 }
 
 .b-select--disabled .b-select__caret {
-  opacity: 0.5;
+  color: var(--b-input-disabled-color);
 }
 </style>

@@ -354,7 +354,7 @@ async function onSubmit(): Promise<void> {
   gap: 0.75rem;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
 }
 
 @media (min-width: 720px) {
@@ -387,7 +387,7 @@ async function onSubmit(): Promise<void> {
 }
 
 .pay__error {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 
 .pay__submit {

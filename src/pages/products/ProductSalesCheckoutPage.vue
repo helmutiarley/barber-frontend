@@ -323,7 +323,7 @@ async function onSubmit(): Promise<void> {
   grid-template-columns: 1fr;
   align-items: end;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
 }
 
 @media (min-width: 700px) {
@@ -341,7 +341,7 @@ async function onSubmit(): Promise<void> {
 .pos__problems {
   margin: 0.75rem 0 0;
   padding-left: 1.1rem;
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
   font-size: 0.8125rem;
 }
 
@@ -371,7 +371,7 @@ async function onSubmit(): Promise<void> {
 
 .pos__error {
   margin-top: 0.75rem;
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 
 .pos__actions {

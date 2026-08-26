@@ -166,7 +166,7 @@ const isForbidden = computed(() => {
 
 .summary__table td {
   padding: 0.6rem 1rem;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
 }
 
 .summary__table tr:last-child td {
@@ -180,7 +180,7 @@ const isForbidden = computed(() => {
 }
 
 .summary__link {
-  color: var(--b-fg-primary-default, #2563eb);
+  color: var(--b-fg-brand-default, #2563eb);
   text-decoration: underline;
 }
 </style>

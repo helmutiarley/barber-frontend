@@ -39,8 +39,11 @@ const style = computed(() => ({
 
 <style scoped>
 .b-icon {
-  display: inline-block;
-  flex: none;
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
   vertical-align: middle;
+  transition: transform 0.3s;
 }
 </style>

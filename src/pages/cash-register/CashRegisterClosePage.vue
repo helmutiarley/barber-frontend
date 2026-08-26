@@ -227,6 +227,6 @@ async function onSubmit(): Promise<void> {
 }
 
 .close__error {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 </style>

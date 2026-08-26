@@ -415,9 +415,9 @@ function shiftDay(delta: number): void {
 .agenda__date-input {
   min-height: 2.25rem;
   padding: 0.35rem 0.6rem;
-  border: 1px solid var(--b-border-neutral-primary, #d0d5dd);
+  border: 1px solid var(--b-stroke-neutral-mid, #d0d5dd);
   border-radius: 0.5rem;
-  background: var(--b-bg-neutral-primary, #fff);
+  background: var(--b-bg-neutral-default, #fff);
   color: inherit;
   font: inherit;
 }
@@ -448,7 +448,7 @@ function shiftDay(delta: number): void {
 .agenda__table td {
   padding: 0.75rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
   vertical-align: middle;
 }
 

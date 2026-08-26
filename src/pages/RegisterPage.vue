@@ -140,7 +140,7 @@ async function onSubmit(): Promise<void> {
 }
 
 .register__link {
-  color: var(--b-fg-brand-primary, #1d4ed8);
+  color: var(--b-fg-brand-hover, #1d4ed8);
   font-weight: 600;
   text-decoration: underline;
 }

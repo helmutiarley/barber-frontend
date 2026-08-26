@@ -376,7 +376,7 @@ async function toggleActive(rule: CommissionRuleDto): Promise<void> {
 }
 
 .rules__warning {
-  border-left: 3px solid var(--b-fg-danger-primary, #b42318);
+  border-left: 3px solid var(--b-fg-danger-hover, #b42318);
 }
 
 .rules__table-card {
@@ -397,7 +397,7 @@ async function toggleActive(rule: CommissionRuleDto): Promise<void> {
 .rules__table td {
   padding: 0.75rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
   vertical-align: middle;
 }
 
@@ -447,7 +447,7 @@ async function toggleActive(rule: CommissionRuleDto): Promise<void> {
 }
 
 .rules__error {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
   margin-bottom: 0.75rem;
 }
 </style>

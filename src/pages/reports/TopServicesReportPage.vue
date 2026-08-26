@@ -197,7 +197,7 @@ function metric(service: { appointments: number; grossCents: number }): number {
 .top__table td {
   padding: 0.7rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
   vertical-align: middle;
 }
 

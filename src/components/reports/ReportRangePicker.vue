@@ -84,9 +84,9 @@ function applyPreset(preset: RangePreset): void {
 .range__date {
   min-height: 2.25rem;
   padding: 0.35rem 0.6rem;
-  border: 1px solid var(--b-border-neutral-primary, #d0d5dd);
+  border: 1px solid var(--b-stroke-neutral-mid, #d0d5dd);
   border-radius: 0.5rem;
-  background: var(--b-bg-neutral-primary, #fff);
+  background: var(--b-bg-neutral-default, #fff);
   color: inherit;
   font: inherit;
 }
@@ -100,7 +100,7 @@ function applyPreset(preset: RangePreset): void {
 
 .range__error {
   margin-top: 0.75rem;
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 
 .range__summary {

@@ -191,16 +191,16 @@ async function onSubmit(): Promise<void> {
 .close__date {
   min-height: 2.75rem;
   padding: 0.35rem 0.6rem;
-  border: 1px solid var(--b-border-neutral-primary, #d0d5dd);
+  border: 1px solid var(--b-stroke-neutral-mid, #d0d5dd);
   border-radius: 0.5rem;
-  background: var(--b-bg-neutral-primary, #fff);
+  background: var(--b-bg-neutral-default, #fff);
   color: inherit;
   font: inherit;
 }
 
 .close__field-error,
 .close__error {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 
 .close__error {
@@ -220,7 +220,7 @@ async function onSubmit(): Promise<void> {
 }
 
 .close__link {
-  color: var(--b-fg-primary-default, #2563eb);
+  color: var(--b-fg-brand-default, #2563eb);
   text-decoration: underline;
 }
 </style>

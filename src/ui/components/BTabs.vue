@@ -33,41 +33,48 @@ const emit = defineEmits<{ 'update:modelValue': [string] }>();
 
 <style scoped>
 .b-tabs {
+  position: relative;
   display: flex;
-  gap: var(--b-spacing-2xs);
-  overflow-x: auto;
+  flex-wrap: nowrap;
+  overflow: auto hidden;
+  -webkit-overflow-scrolling: touch;
   border-bottom: 1px solid var(--b-stroke-default);
+  color: var(--b-tabs-color);
 }
 
 .b-tabs__tab {
-  padding: var(--b-spacing-2xs) var(--b-spacing-xs);
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  gap: var(--b-spacing-2xs);
+  width: fit-content;
+  height: 56px;
+  padding: 0 var(--b-spacing-md);
   border: 0;
-  border-bottom: 2px solid transparent;
   background: transparent;
-  color: var(--b-fg-neutral-secondary);
+  color: inherit;
   font-family: var(--b-font-family);
   font-size: var(--b-font-size-body-2);
   line-height: var(--b-line-height-body-2);
-  font-weight: var(--b-font-weight-medium);
+  font-weight: var(--b-font-weight-body-2);
+  letter-spacing: var(--b-letter-spacing-body-2);
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition:
-    color var(--b-transition),
-    border-color var(--b-transition);
 }
 
 .b-tabs__tab:hover {
-  color: var(--b-fg-neutral-default);
+  background-color: var(--b-tabs-tab-hover-bg);
 }
 
 .b-tabs__tab--active {
-  color: var(--b-fg-brand-primary);
-  border-bottom-color: var(--b-color-brand-500);
+  color: var(--b-tabs-color-active);
+  box-shadow: inset 0 -2px 0 0 var(--b-tabs-indicator-bg);
 }
 
 .b-tabs__tab:focus-visible {
-  outline: 2px solid var(--b-fg-brand-default);
+  outline: var(--b-tabs-focus-visible-outline);
   outline-offset: -2px;
 }
 </style>

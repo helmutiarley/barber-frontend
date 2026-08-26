@@ -295,7 +295,7 @@ async function onMovement(): Promise<void> {
 }
 
 .cash__error {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
   margin-bottom: 0.75rem;
 }
 
@@ -313,7 +313,7 @@ async function onMovement(): Promise<void> {
 .cash__ledger td {
   padding: 0.65rem 0.5rem;
   text-align: left;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
   vertical-align: middle;
 }
 

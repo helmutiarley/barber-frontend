@@ -294,7 +294,7 @@ function formatBirthday(value: string | null): string {
 .clients__table td {
   padding: 0.75rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
   vertical-align: middle;
 }
 

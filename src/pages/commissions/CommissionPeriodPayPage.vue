@@ -190,7 +190,7 @@ async function onSubmit(): Promise<void> {
 
 .pay__error {
   margin-top: 0.75rem;
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 
 .pay__actions {

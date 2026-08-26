@@ -33,10 +33,10 @@ withDefaults(
 }
 
 .stat__value--positive {
-  color: var(--b-fg-success-primary, #067647);
+  color: var(--b-fg-success-hover, #067647);
 }
 
 .stat__value--negative {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 </style>

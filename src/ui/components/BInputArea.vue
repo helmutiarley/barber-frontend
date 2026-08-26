@@ -48,18 +48,25 @@ function onInput(event: Event): void {
     :optional-text="optionalText"
     :helper-text="helperText"
   >
-    <textarea
-      :id="inputId"
-      class="b-input-area"
-      :class="{ 'b-input-area--invalid': Boolean(helperText) }"
-      :value="modelValue ?? ''"
-      :placeholder="placeholder"
-      :disabled="Boolean(isDisabled)"
-      :rows="rowCount"
-      :aria-invalid="helperText ? 'true' : undefined"
-      :aria-describedby="describedBy"
-      @input="onInput"
-    />
+    <div
+      class="b-input-area__border"
+      :class="{
+        'b-input-area__border--error': Boolean(helperText),
+        'b-input-area__border--disabled': Boolean(props.isDisabled),
+      }"
+    >
+      <textarea
+        :id="inputId"
+        class="b-input-area__field"
+        :value="modelValue ?? ''"
+        :placeholder="placeholder"
+        :disabled="Boolean(isDisabled)"
+        :rows="rowCount"
+        :aria-invalid="helperText ? 'true' : undefined"
+        :aria-describedby="describedBy"
+        @input="onInput"
+      />
+    </div>
 
     <div v-if="slots.footer" class="b-input-area__footer">
       <slot name="footer" />
@@ -68,40 +75,58 @@ function onInput(event: Event): void {
 </template>
 
 <style scoped>
-.b-input-area {
+.b-input-area__border {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--b-spacing-2xs);
   width: 100%;
-  padding: var(--b-spacing-2xs) var(--b-spacing-xs);
-  background: var(--b-bg-neutral-default);
-  border: 1px solid var(--b-border-neutral-secondary);
-  border-radius: var(--b-border-radius-sm);
-  color: var(--b-fg-neutral-default);
-  font-family: var(--b-font-family);
-  font-size: var(--b-font-size-body-2);
-  line-height: var(--b-line-height-body-2);
-  resize: vertical;
-  transition:
-    border-color var(--b-transition),
-    box-shadow var(--b-transition);
+  padding-block: 7px;
+  padding-inline: var(--b-spacing-sm);
+  border: none;
+  border-radius: var(--b-border-radius-md);
+  background-color: var(--b-border-background-color);
+  box-shadow: 0 0 0 1px var(--b-border-border-color);
 }
 
-.b-input-area::placeholder {
-  color: var(--b-fg-neutral-tertiary);
+.b-input-area__border:focus-within {
+  box-shadow: 0 0 0 2px var(--b-border-focus-color);
 }
 
-.b-input-area:focus {
-  outline: none;
-  border-color: var(--b-color-brand-500);
-  box-shadow: 0 0 0 3px var(--b-color-brand-50);
+.b-input-area__border--error,
+.b-input-area__border--error:focus-within {
+  box-shadow: 0 0 0 2px var(--b-border-error-color);
 }
 
-.b-input-area:disabled {
-  background: var(--b-bg-neutral-secondary);
-  color: var(--b-fg-neutral-secondary);
+.b-input-area__border--disabled {
+  background-color: var(--b-border-disabled-background-color);
+  box-shadow: 0 0 0 1px var(--b-border-disabled-color);
   cursor: not-allowed;
 }
 
-.b-input-area--invalid {
-  border-color: var(--b-border-danger-default);
+.b-input-area__field {
+  width: 100%;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+  resize: none;
+  overflow: hidden auto;
+  color: var(--b-input-area-color);
+  font-family: var(--b-font-family);
+  font-size: var(--b-input-area-font-size);
+  line-height: var(--b-input-area-line-height);
+  font-weight: var(--b-input-area-font-weight);
+  letter-spacing: var(--b-input-area-letter-spacing);
+}
+
+.b-input-area__field::placeholder {
+  color: var(--b-input-area-placeholder-color);
+}
+
+.b-input-area__field:disabled {
+  color: var(--b-input-area-disabled-color);
+  cursor: not-allowed;
 }
 
 .b-input-area__footer {

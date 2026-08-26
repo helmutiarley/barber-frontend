@@ -166,7 +166,7 @@ const isProfit = computed(() => (report.value?.resultCents ?? 0) >= 0);
 .dre__table td {
   padding: 0.6rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--b-border-neutral-secondary, #eaecf0);
+  border-bottom: 1px solid var(--b-stroke-default, #eaecf0);
 }
 
 .dre__table td:last-child {
@@ -188,7 +188,7 @@ const isProfit = computed(() => (report.value?.resultCents ?? 0) >= 0);
 }
 
 .dre__negative td:last-child {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 
 .dre__muted {
@@ -202,11 +202,11 @@ const isProfit = computed(() => (report.value?.resultCents ?? 0) >= 0);
 }
 
 .dre__profit td:last-child {
-  color: var(--b-fg-success-primary, #067647);
+  color: var(--b-fg-success-hover, #067647);
 }
 
 .dre__loss td:last-child {
-  color: var(--b-fg-danger-primary, #b42318);
+  color: var(--b-fg-danger-hover, #b42318);
 }
 
 .dre__notes {
