@@ -127,7 +127,7 @@ function onSubmit(): void {
 </script>
 
 <template>
-  <PageLayout :subtitle="user?.email">
+  <PageLayout :subtitle="user?.email ?? undefined">
     <template #title>
       <div class="edit__title">
         <PageBackLink to="/users" label="Usuários" />

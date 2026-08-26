@@ -3,7 +3,7 @@ import type { UserRole } from '@/lib/roles';
 export interface UserDto {
   id: string;
   name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   role: UserRole;
   active: boolean;
@@ -165,7 +165,7 @@ export interface PagedResult<T> {
 export interface ClientListItemDto {
   id: string;
   name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   active: boolean;
   birthday: string | null;
@@ -199,7 +199,7 @@ export interface BarberClientDto {
 export interface SelfClientDto {
   id: string;
   name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   birthday: string | null;
   preferences: string | null;

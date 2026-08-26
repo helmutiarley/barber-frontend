@@ -135,7 +135,7 @@ function formatBirthday(value: string | null | undefined): string {
         <dl class="detail__grid">
           <div>
             <dt>Email</dt>
-            <dd>{{ staff.email }}</dd>
+            <dd>{{ staff.email || '—' }}</dd>
           </div>
           <div>
             <dt>Telefone</dt>

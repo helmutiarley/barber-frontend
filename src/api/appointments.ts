@@ -1,11 +1,17 @@
 import { apiRequest, apiRequestPaged } from '@/api/client';
 import type { AppointmentDto, AppointmentStatus, PagedResult } from '@/api/types';
 
+export type WalkInInput = {
+  name: string;
+  phone: string;
+};
+
 export type CreateAppointmentInput = {
   barberId: string;
   serviceId: string;
   startsAt: string;
   clientId?: string;
+  walkIn?: WalkInInput;
   notes?: string;
   force?: boolean;
 };
@@ -39,6 +45,7 @@ export function createAppointment(body: CreateAppointmentInput): Promise<Appoint
       serviceId: body.serviceId,
       startsAt: body.startsAt,
       ...(body.clientId ? { clientId: body.clientId } : {}),
+      ...(body.walkIn ? { walkIn: body.walkIn } : {}),
       ...(body.notes ? { notes: body.notes } : {}),
       ...(body.force !== undefined ? { force: body.force } : {}),
     },

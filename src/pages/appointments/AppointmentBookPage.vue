@@ -3,6 +3,7 @@ import {
   BButton,
   BInput,
   BInputArea,
+  BSegmentedControl,
   BSelect,
   BText,
   useBToast,
@@ -22,6 +23,7 @@ import {
   bookAppointmentSchema,
   fieldErrorsFromZod,
   receptionBookSchema,
+  type ClientMode,
 } from '@/features/appointments/schemas';
 import { ApiError, messageForApiError } from '@/lib/errors';
 import { formatMoney } from '@/lib/money';
@@ -44,8 +46,11 @@ const isReception = computed(
 );
 
 const form = reactive({
+  clientMode: 'existing' as ClientMode,
   clientId: '',
   clientSearch: '',
+  walkInName: '',
+  walkInPhone: '',
   serviceId: '',
   barberId: '',
   date: shopToday(),
@@ -87,7 +92,7 @@ const clientsQuery = useQuery({
       search: clientSearchDebounced.value || undefined,
       limit: 20,
     }),
-  enabled: isReception,
+  enabled: computed(() => isReception.value && form.clientMode === 'existing'),
 });
 
 // `isLoading`, not `isPending`: a disabled query stays pending forever, so
@@ -107,9 +112,27 @@ const barberOptions = computed(() =>
 
 const clientOptions = computed(() =>
   (clientsQuery.data.value?.data ?? []).map((c) => ({
-    label: `${c.name}${c.phone ? ` · ${c.phone}` : ''}`,
+    label: `${c.phone ?? 'sem telefone'} · ${c.name}`,
     value: c.id,
   })),
+);
+
+const isWalkIn = computed(() => isReception.value && form.clientMode === 'walkIn');
+
+const clientModeSegments = [
+  { id: 'existing', label: 'Já cadastrado' },
+  { id: 'walkIn', label: 'Novo (balcão)' },
+];
+
+watch(
+  () => form.clientMode,
+  (mode) => {
+    const searchedDigits = form.clientSearch.replace(/\D/g, '');
+
+    if (mode === 'walkIn' && !form.walkInPhone && searchedDigits.length >= 8) {
+      form.walkInPhone = form.clientSearch.trim();
+    }
+  },
 );
 
 watch(
@@ -183,7 +206,10 @@ async function onSubmit(): Promise<void> {
       serviceId: parsed.data.serviceId,
       startsAt: parsed.data.startsAt,
       notes: parsed.data.notes.trim() || undefined,
-      clientId: isReception.value ? parsed.data.clientId : undefined,
+      clientId: isReception.value && !isWalkIn.value ? parsed.data.clientId : undefined,
+      walkIn: isWalkIn.value
+        ? { name: form.walkInName.trim(), phone: form.walkInPhone.trim() }
+        : undefined,
       force: isReception.value ? parsed.data.force : undefined,
     });
     toast.add({ message: 'Horário marcado.', severity: 'success' });
@@ -218,30 +244,54 @@ async function onSubmit(): Promise<void> {
 
     <form class="book__form" @submit.prevent="onSubmit">
       <SectionCard v-if="isReception" title="Cliente">
-        <BInput
-          v-model="form.clientSearch"
-          label="Buscar"
-          placeholder="Nome, email ou telefone"
+        <BSegmentedControl
+          v-model="form.clientMode"
+          :segments="clientModeSegments"
+          aria-label="Tipo de cliente"
         />
-        <BSelect
-          v-model="form.clientId"
-          label="Cliente"
-          label-prepend-asterisk
-          :options="clientOptions"
-          :helper-text="
-            fieldErrors.clientId ||
-            (clientsLoading
-              ? 'Buscando…'
-              : clientOptions.length === 0
-                ? 'Nenhum cliente encontrado — cadastre em Clientes.'
-                : undefined)
-          "
-          :is-disabled="clientOptions.length === 0"
-        />
-        <BText as="p" variant="body-3" color="b-fg-neutral-secondary">
-          Criação de walk-in (nome + telefone) ainda não está nesta tela — use um cliente já
-          cadastrado.
-        </BText>
+
+        <template v-if="form.clientMode === 'existing'">
+          <BInput
+            v-model="form.clientSearch"
+            label="Buscar pelo telefone"
+            placeholder="Telefone, nome ou email"
+          />
+          <BSelect
+            v-model="form.clientId"
+            label="Cliente"
+            label-prepend-asterisk
+            :options="clientOptions"
+            :helper-text="
+              fieldErrors.clientId ||
+              (clientsLoading
+                ? 'Buscando…'
+                : clientOptions.length === 0
+                  ? 'Ninguém encontrado — cadastre em Novo (balcão).'
+                  : undefined)
+            "
+            :is-disabled="clientOptions.length === 0"
+          />
+        </template>
+
+        <template v-else>
+          <BInput
+            v-model="form.walkInPhone"
+            label="Telefone"
+            label-prepend-asterisk
+            placeholder="(11) 98888-7777"
+            :helper-text="fieldErrors.walkInPhone"
+          />
+          <BInput
+            v-model="form.walkInName"
+            label="Nome"
+            label-prepend-asterisk
+            :helper-text="fieldErrors.walkInName"
+          />
+          <BText as="p" variant="body-3" color="b-fg-neutral-secondary">
+            O telefone é o que identifica o cliente: se já houver cadastro com esse número, o
+            horário vai para ele em vez de criar outro.
+          </BText>
+        </template>
       </SectionCard>
 
       <SectionCard title="Serviço e horário">

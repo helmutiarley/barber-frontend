@@ -96,7 +96,7 @@ const users = computed(() => data.value ?? []);
           <tbody>
             <tr v-for="row in users" :key="row.id">
               <td class="users__cell-strong">{{ row.name }}</td>
-              <td>{{ row.email }}</td>
+              <td>{{ row.email || '—' }}</td>
               <td>{{ row.phone || '—' }}</td>
               <td>
                 <BLabel variant="outline" color="gray">{{ ROLE_LABELS[row.role] }}</BLabel>

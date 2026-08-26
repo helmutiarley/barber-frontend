@@ -144,7 +144,7 @@ async function onCrmSubmit(): Promise<void> {
 </script>
 
 <template>
-  <PageLayout title="Perfil" :subtitle="auth.user?.email" :is-loading="loading">
+  <PageLayout title="Perfil" :subtitle="auth.user?.email ?? undefined" :is-loading="loading">
     <form class="profile__form" @submit.prevent="onSubmit">
       <SectionCard title="Dados pessoais">
         <div class="profile__fields">

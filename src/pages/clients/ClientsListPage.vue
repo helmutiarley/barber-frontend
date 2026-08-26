@@ -202,7 +202,12 @@ function formatBirthday(value: string | null): string {
                 <td>
                   <div class="clients__contact">
                     <span>{{ row.phone || '—' }}</span>
-                    <BText as="span" variant="body-3" color="b-fg-neutral-secondary">
+                    <BText
+                      v-if="row.email"
+                      as="span"
+                      variant="body-3"
+                      color="b-fg-neutral-secondary"
+                    >
                       {{ row.email }}
                     </BText>
                   </div>

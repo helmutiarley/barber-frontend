@@ -34,7 +34,7 @@ const { isPending: usersPending, isError: usersFailed } = usersQuery;
 
 const userOptions = computed(() =>
   (usersQuery.data.value ?? []).map((user) => ({
-    label: `${user.name} (${user.email})`,
+    label: user.email ? `${user.name} (${user.email})` : user.name,
     value: user.id,
   })),
 );

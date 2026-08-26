@@ -21,15 +21,48 @@ export const bookAppointmentSchema = z.object({
   clientId: z.string().optional(),
 });
 
-export const receptionBookSchema = bookAppointmentSchema.superRefine((data, ctx) => {
-  if (!data.clientId || !z.string().uuid().safeParse(data.clientId).success) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Selecione o cliente',
-      path: ['clientId'],
-    });
-  }
-});
+export type ClientMode = 'existing' | 'walkIn';
+
+export const receptionBookSchema = bookAppointmentSchema
+  .extend({
+    clientMode: z.enum(['existing', 'walkIn']),
+    walkInName: z.string().trim(),
+    walkInPhone: z.string().trim(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.clientMode === 'existing') {
+      if (!z.string().uuid().safeParse(data.clientId).success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Selecione o cliente',
+          path: ['clientId'],
+        });
+      }
+      return;
+    }
+
+    if (data.walkInPhone.replace(/\D/g, '').length < 8) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Informe um telefone válido',
+        path: ['walkInPhone'],
+      });
+    }
+    if (data.walkInPhone.length > 20) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Telefone muito longo',
+        path: ['walkInPhone'],
+      });
+    }
+    if (data.walkInName.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Informe o nome',
+        path: ['walkInName'],
+      });
+    }
+  });
 
 export const rescheduleSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Informe a data'),
