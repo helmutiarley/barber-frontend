@@ -120,19 +120,22 @@ async function onSubmit(): Promise<void> {
     </BEmptyState>
 
     <form v-else class="close__form" @submit.prevent="onSubmit">
-      <SectionCard title="Resumo">
+      <SectionCard
+        title="Resumo da gaveta"
+        subtitle="Pix e cartão ficam fora da contagem — só o dinheiro está aqui."
+      >
         <dl class="close__grid">
           <div>
             <dt>Abertura</dt>
             <dd>{{ formatMoney(current.session.openingBalanceCents) }}</dd>
           </div>
           <div>
-            <dt>Entradas</dt>
-            <dd>{{ formatMoney(current.totals.inCents) }}</dd>
+            <dt>Entradas em dinheiro</dt>
+            <dd>{{ formatMoney(current.totals.cashInCents) }}</dd>
           </div>
           <div>
-            <dt>Saídas</dt>
-            <dd>{{ formatMoney(current.totals.outCents) }}</dd>
+            <dt>Saídas em dinheiro</dt>
+            <dd>{{ formatMoney(current.totals.cashOutCents) }}</dd>
           </div>
           <div>
             <dt>Esperado</dt>

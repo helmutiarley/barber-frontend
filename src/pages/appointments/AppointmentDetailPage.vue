@@ -12,7 +12,7 @@ import {
   useBToast,
 } from '@/ui';
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import {
   cancelAppointment,
@@ -35,6 +35,7 @@ import {
   cancellationWindowHours,
   isInsideCancellationWindow,
 } from '@/features/appointments/actions';
+import { completionErrorToast } from '@/features/appointments/complete-errors';
 import {
   cancelSchema,
   clientCancelSchema,
@@ -51,12 +52,14 @@ import { formatMoney } from '@/lib/money';
 import type { UserRole } from '@/lib/roles';
 import { formatShopDateTime, shopToday } from '@/lib/shop-time';
 import { useAuthStore } from '@/stores/auth';
+import { useCashRegisterStore } from '@/stores/cash-register';
 
 const route = useRoute();
 const router = useRouter();
 const toast = useBToast();
 const queryClient = useQueryClient();
 const auth = useAuthStore();
+const cash = useCashRegisterStore();
 const { hasRole, role } = usePermission();
 const { ownBarberId } = useOwnBarberId();
 
@@ -64,6 +67,10 @@ const id = computed(() => String(route.params.id));
 const isStaff = computed(() => hasRole('ADMIN') || hasRole('MANAGER'));
 const isClient = computed(() => hasRole('CLIENT'));
 const canOpenClient = computed(() => isStaff.value || hasRole('BARBER'));
+
+onMounted(() => {
+  void cash.refresh();
+});
 
 const detailQuery = useQuery({
   queryKey: computed(() => ['appointments', id.value] as const),
@@ -105,6 +112,8 @@ const canCollectPayment = computed(
     (appointment.value.status === 'confirmed' || appointment.value.status === 'completed') &&
     remainingCents.value > 0,
 );
+const drawerClosed = computed(() => cash.status === 'closed');
+const collectBlockedByDrawer = computed(() => canCollectPayment.value && drawerClosed.value);
 
 const serviceName = computed(() => {
   const map = new Map((servicesQuery.data.value ?? []).map((s) => [s.id, s.name]));
@@ -120,6 +129,23 @@ const actions = computed(() => {
   return availableActions(appointment.value, role.value as UserRole, {
     ownBarberId: ownBarberId.value,
   });
+});
+
+const completeBlockedByDrawer = computed(
+  () => actions.value.includes('complete') && drawerClosed.value,
+);
+
+const drawerHint = computed(() => {
+  if (completeBlockedByDrawer.value && collectBlockedByDrawer.value) {
+    return 'O caixa está fechado — abra o caixa para concluir e receber este horário.';
+  }
+  if (completeBlockedByDrawer.value) {
+    return 'O caixa está fechado — abra o caixa para concluir este atendimento.';
+  }
+  if (collectBlockedByDrawer.value) {
+    return 'O caixa está fechado — abra o caixa para receber este horário.';
+  }
+  return null;
 });
 
 const clientBlocked = computed(
@@ -167,18 +193,8 @@ async function runComplete(): Promise<void> {
     toast.add({ message: 'Atendimento concluído.', severity: 'success' });
     await invalidateAll();
   } catch (error) {
-    if (error instanceof ApiError && error.code === 'CONFLICT') {
-      toast.add({
-        message:
-          'Não há regra de comissão para este barbeiro/serviço. Configure em Comissões.',
-        severity: 'warning',
-      });
-      return;
-    }
-    toast.add({
-      message: error instanceof ApiError ? messageForApiError(error) : 'Falha ao concluir.',
-      severity: 'failure',
-    });
+    toast.add(completionErrorToast(error));
+    await cash.refresh();
   } finally {
     actionPending.value = false;
   }
@@ -465,11 +481,27 @@ const ownerHint = computed(() => {
         remarcar, ligue para a barbearia.
       </BText>
 
+      <BText
+        v-if="drawerHint"
+        as="p"
+        variant="body-3"
+        color="b-fg-neutral-secondary"
+        class="detail__drawer-hint"
+      >
+        {{ drawerHint }}
+      </BText>
+
       <div class="detail__actions">
-        <RouterLink v-if="canCollectPayment" :to="`/appointments/${id}/pay`">
+        <RouterLink
+          v-if="canCollectPayment && !collectBlockedByDrawer"
+          :to="`/appointments/${id}/pay`"
+        >
           <BButton color="neutral" variant="contain">
             Receber · {{ formatMoney(remainingCents) }}
           </BButton>
+        </RouterLink>
+        <RouterLink v-if="drawerHint" to="/cash-register/open">
+          <BButton color="neutral" variant="outline">Abrir caixa</BButton>
         </RouterLink>
         <BButton
           v-if="actions.includes('confirm')"
@@ -485,6 +517,7 @@ const ownerHint = computed(() => {
           color="neutral"
           variant="contain"
           :is-loading="actionPending"
+          :is-disabled="completeBlockedByDrawer"
           @click="runComplete"
         >
           Concluir
@@ -669,6 +702,10 @@ const ownerHint = computed(() => {
 }
 
 .detail__policy {
+  margin-top: 1rem;
+}
+
+.detail__drawer-hint {
   margin-top: 1rem;
 }
 

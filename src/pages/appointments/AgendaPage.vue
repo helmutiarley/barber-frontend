@@ -10,7 +10,7 @@ import {
   useBToast,
 } from '@/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import {
   completeAppointment,
@@ -25,6 +25,7 @@ import PageLayout from '@/components/layout/PageLayout.vue';
 import { useOwnBarberId } from '@/composables/useOwnBarberId';
 import { usePermission } from '@/composables/usePermission';
 import { availableActions } from '@/features/appointments/actions';
+import { completionErrorToast } from '@/features/appointments/complete-errors';
 import {
   APPOINTMENT_STATUS_COLORS,
   APPOINTMENT_STATUS_LABELS,
@@ -32,11 +33,13 @@ import {
 import { ApiError, messageForApiError } from '@/lib/errors';
 import { formatMoney } from '@/lib/money';
 import { formatShopDateTime, shopToday } from '@/lib/shop-time';
+import { useCashRegisterStore } from '@/stores/cash-register';
 
 const route = useRoute();
 const router = useRouter();
 const toast = useBToast();
 const queryClient = useQueryClient();
+const cash = useCashRegisterStore();
 const { hasRole, role } = usePermission();
 const { ownBarberId, resolving: resolvingOwn, resolveError } = useOwnBarberId();
 
@@ -130,6 +133,11 @@ const barberName = computed(() => {
 });
 
 const actionPending = ref<string | null>(null);
+const drawerClosed = computed(() => cash.status === 'closed');
+
+onMounted(() => {
+  void cash.refresh();
+});
 
 async function invalidateAgenda(): Promise<void> {
   await queryClient.invalidateQueries({ queryKey: ['agenda'] });
@@ -161,19 +169,9 @@ const completeMut = useMutation({
     toast.add({ message: 'Atendimento concluído.', severity: 'success' });
     await invalidateAgenda();
   },
-  onError: (error) => {
-    if (error instanceof ApiError && error.code === 'CONFLICT') {
-      toast.add({
-        message:
-          'Não há regra de comissão para este barbeiro/serviço. Configure em Comissões e tente de novo.',
-        severity: 'warning',
-      });
-      return;
-    }
-    toast.add({
-      message: error instanceof ApiError ? messageForApiError(error) : 'Falha ao concluir.',
-      severity: 'failure',
-    });
+  onError: async (error) => {
+    toast.add(completionErrorToast(error));
+    await cash.refresh();
   },
 });
 
@@ -263,6 +261,15 @@ function shiftDay(delta: number): void {
       </div>
     </BCard>
 
+    <BCard v-if="drawerClosed" class="agenda__drawer">
+      <BText as="span" variant="body-2">
+        O caixa está fechado — abra o caixa para concluir atendimentos.
+      </BText>
+      <RouterLink to="/cash-register/open">
+        <BButton size="small" color="neutral" variant="outline">Abrir caixa</BButton>
+      </RouterLink>
+    </BCard>
+
     <BEmptyState
       v-if="!isStaffPicker && resolveError"
       title="Perfil não encontrado"
@@ -348,6 +355,7 @@ function shiftDay(delta: number): void {
                   color="neutral"
                   variant="contain"
                   :is-loading="actionPending === `complete:${row.id}`"
+                  :is-disabled="drawerClosed"
                   @click="runAction('complete', row.id)"
                 >
                   Concluir
@@ -373,6 +381,15 @@ function shiftDay(delta: number): void {
 
 <style scoped>
 .agenda__filters {
+  margin-bottom: 1rem;
+}
+
+.agenda__drawer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
   margin-bottom: 1rem;
 }
 

@@ -28,6 +28,7 @@ import {
   resolveManualKind,
 } from '@/features/cash-register/labels';
 import { fieldErrorsFromZod, manualMovementSchema } from '@/features/cash-register/schemas';
+import { PAYMENT_METHOD_LABELS } from '@/features/payments/method-labels';
 import { ApiError, messageForApiError } from '@/lib/errors';
 import { formatMoney } from '@/lib/money';
 import { formatShopDateTime } from '@/lib/shop-time';
@@ -81,6 +82,12 @@ const pending = ref(false);
 
 const movements = computed(() => detailQuery.data.value?.movements ?? []);
 
+const methodRows = computed(() =>
+  (current.value?.totals.byMethod ?? []).filter(
+    (row) => row.inCents !== 0 || row.outCents !== 0,
+  ),
+);
+
 async function invalidate(): Promise<void> {
   await queryClient.invalidateQueries({ queryKey: ['cash-register'] });
   await cash.refresh();
@@ -123,7 +130,7 @@ async function onMovement(): Promise<void> {
 <template>
   <PageLayout
     title="Caixa"
-    subtitle="Uma gaveta aberta por vez. Pagamentos e despesas em dinheiro passam por aqui."
+    subtitle="Tudo que a barbearia recebeu no dia, em qualquer forma. O saldo esperado conta só a gaveta."
   >
     <template #header-actions>
       <RouterLink to="/cash-register/sessions">
@@ -142,7 +149,7 @@ async function onMovement(): Promise<void> {
     <BEmptyState
       v-else-if="!current"
       title="Caixa fechado"
-      subtitle="Abra o caixa para receber em dinheiro e registrar movimentos manuais."
+      subtitle="Abra o caixa para concluir agendamentos, receber pagamentos e registrar movimentos."
     >
       <template #actions>
         <RouterLink to="/cash-register/open">
@@ -167,6 +174,9 @@ async function onMovement(): Promise<void> {
           <BText as="span" variant="heading-2">
             {{ formatMoney(current.totals.inCents) }}
           </BText>
+          <BText as="span" variant="body-3" color="b-fg-neutral-secondary">
+            Todas as formas de pagamento
+          </BText>
         </BCard>
         <BCard class="cash__stat">
           <BText as="span" variant="body-3" color="b-fg-neutral-secondary">Saídas</BText>
@@ -175,12 +185,48 @@ async function onMovement(): Promise<void> {
           </BText>
         </BCard>
         <BCard class="cash__stat">
-          <BText as="span" variant="body-3" color="b-fg-neutral-secondary">Esperado</BText>
+          <BText as="span" variant="body-3" color="b-fg-neutral-secondary">Esperado na gaveta</BText>
           <BText as="span" variant="heading-2">
             {{ formatMoney(current.totals.expectedBalanceCents) }}
           </BText>
+          <BText as="span" variant="body-3" color="b-fg-neutral-secondary">
+            Só dinheiro: {{ formatMoney(current.totals.cashInCents) }} entrou,
+            {{ formatMoney(current.totals.cashOutCents) }} saiu
+          </BText>
         </BCard>
       </div>
+
+      <SectionCard
+        title="Por forma de pagamento"
+        subtitle="Descritivo do que foi apurado. Só o dinheiro entra na contagem do fechamento."
+        class="cash__methods"
+      >
+        <BEmptyState
+          v-if="methodRows.length === 0"
+          title="Nada recebido ainda"
+          subtitle="Pagamentos de agendamentos e vendas aparecem aqui assim que forem registrados."
+        />
+        <div v-else class="cash__ledger-wrap">
+          <table class="cash__ledger">
+            <thead>
+              <tr>
+                <th>Forma</th>
+                <th>Entradas</th>
+                <th>Saídas</th>
+                <th>Líquido</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in methodRows" :key="row.method">
+                <td>{{ PAYMENT_METHOD_LABELS[row.method] }}</td>
+                <td>{{ formatMoney(row.inCents) }}</td>
+                <td>{{ formatMoney(row.outCents) }}</td>
+                <td>{{ formatMoney(row.netCents) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </SectionCard>
 
       <div class="cash__toolbar">
         <RouterLink to="/cash-register/close">
@@ -226,7 +272,7 @@ async function onMovement(): Promise<void> {
         <BEmptyState
           v-else-if="movements.length === 0"
           title="Sem movimentos"
-          subtitle="Pagamentos em dinheiro e movimentos manuais aparecem aqui."
+          subtitle="Pagamentos, vendas e movimentos manuais aparecem aqui."
         />
         <div v-else class="cash__ledger-wrap">
           <table class="cash__ledger">
@@ -235,6 +281,7 @@ async function onMovement(): Promise<void> {
                 <th>Quando</th>
                 <th>Tipo</th>
                 <th>Origem</th>
+                <th>Forma</th>
                 <th>Valor</th>
                 <th>Descrição</th>
               </tr>
@@ -248,6 +295,7 @@ async function onMovement(): Promise<void> {
                   </BLabel>
                 </td>
                 <td>{{ MOVEMENT_SOURCE_LABELS[row.source] }}</td>
+                <td>{{ PAYMENT_METHOD_LABELS[row.method] }}</td>
                 <td>{{ formatMoney(row.amountCents) }}</td>
                 <td>{{ row.description || '—' }}</td>
               </tr>
@@ -277,6 +325,10 @@ async function onMovement(): Promise<void> {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.cash__methods {
+  margin-bottom: 1rem;
 }
 
 .cash__toolbar {

@@ -116,7 +116,7 @@ Surfaced globally or at the point of action:
 
 | Gate                         | UX                                                                 |
 | ---------------------------- | ------------------------------------------------------------------ |
-| Cash register closed         | Banner in shell for ADMIN/MANAGER; cash method disabled in forms   |
+| Cash register closed         | Banner in shell for ADMIN/MANAGER; completing and receiving both blocked, with a link to open it |
 | No applicable commission rule| Warn on complete appointment; explain 409                          |
 | Client cancel window         | Disable self cancel/reschedule; show “call the shop”               |
 | Commission period closed     | Disable void payment / void sale that would touch closed entries   |

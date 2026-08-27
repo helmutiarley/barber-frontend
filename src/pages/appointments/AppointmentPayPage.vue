@@ -89,8 +89,7 @@ const previewTotalCents = computed(() => {
   return any ? sum : null;
 });
 
-const hasCashLine = computed(() => lines.value.some((line) => line.method === 'cash'));
-const cashBlocked = computed(() => hasCashLine.value && cash.status === 'closed');
+const drawerClosed = computed(() => cash.status === 'closed');
 
 function addLine(): void {
   if (lines.value.length >= 4) return;
@@ -125,8 +124,8 @@ async function onSubmit(): Promise<void> {
     return;
   }
 
-  if (cashBlocked.value) {
-    formError.value = 'Abra o caixa para receber em dinheiro.';
+  if (drawerClosed.value) {
+    formError.value = 'Abra o caixa para receber pagamentos.';
     return;
   }
 
@@ -160,6 +159,8 @@ async function onSubmit(): Promise<void> {
     toast.add({ message: 'Pagamento registrado.', severity: 'success' });
     await queryClient.invalidateQueries({ queryKey: ['appointments', id.value, 'payments'] });
     await queryClient.invalidateQueries({ queryKey: ['payments'] });
+    await queryClient.invalidateQueries({ queryKey: ['cash-register'] });
+    await cash.refresh();
     await router.push(`/appointments/${id.value}`);
   } catch (error) {
     const message =
@@ -224,15 +225,20 @@ async function onSubmit(): Promise<void> {
         subtitle="Não há saldo restante neste horário."
       />
 
+      <BEmptyState
+        v-else-if="drawerClosed"
+        title="Caixa fechado"
+        subtitle="Todo recebimento entra na sessão de caixa do dia. Abra o caixa para registrar."
+      >
+        <template #actions>
+          <RouterLink to="/cash-register/open">
+            <BButton color="neutral" variant="contain">Abrir caixa</BButton>
+          </RouterLink>
+        </template>
+      </BEmptyState>
+
       <form v-else class="pay__form" @submit.prevent="onSubmit">
         <SectionCard title="Pagamentos">
-          <div v-if="cashBlocked" class="pay__cash-warn" role="status">
-            <BText as="p" variant="body-2">
-              O caixa está fechado. Remova a linha em dinheiro ou
-              <RouterLink to="/cash-register">abra o caixa</RouterLink>.
-            </BText>
-          </div>
-
           <div v-for="(line, index) in lines" :key="index" class="pay__line">
             <BSelect v-model="line.method" label="Forma" :options="PAYMENT_METHOD_FORM_OPTIONS" />
             <BInput
@@ -294,13 +300,7 @@ async function onSubmit(): Promise<void> {
         </BText>
 
         <div class="pay__submit">
-          <BButton
-            type="submit"
-            color="neutral"
-            variant="contain"
-            :is-loading="pending"
-            :is-disabled="cashBlocked"
-          >
+          <BButton type="submit" color="neutral" variant="contain" :is-loading="pending">
             Registrar
             <template v-if="previewTotalCents != null">
               · {{ formatMoney(previewTotalCents) }}
@@ -372,18 +372,6 @@ async function onSubmit(): Promise<void> {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-}
-
-.pay__cash-warn {
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  background: var(--b-bg-warning-tint-default, #fffaeb);
-}
-
-.pay__cash-warn a {
-  color: inherit;
-  font-weight: 600;
 }
 
 .pay__error {

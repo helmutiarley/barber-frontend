@@ -30,12 +30,24 @@ export interface SessionDto {
   notes: string | null;
 }
 
+export interface MethodTotalsDto {
+  method: PaymentMethod;
+  inCents: number;
+  outCents: number;
+  netCents: number;
+}
+
 export interface CurrentSessionDto {
   session: SessionDto;
   totals: {
+    /** Everything taken in the session, whatever the method. */
     inCents: number;
     outCents: number;
+    /** The drawer alone — what the closing count is measured against. */
+    cashInCents: number;
+    cashOutCents: number;
     expectedBalanceCents: number;
+    byMethod: MethodTotalsDto[];
   };
 }
 
@@ -57,6 +69,7 @@ export interface CashMovementDto {
   sessionId: string;
   type: CashMovementType;
   source: CashMovementSource;
+  method: PaymentMethod;
   amountCents: number;
   paymentId: string | null;
   expenseId: string | null;
