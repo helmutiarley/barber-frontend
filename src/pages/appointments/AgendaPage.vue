@@ -84,9 +84,6 @@ const barbersQuery = useQuery({
   queryFn: () => listBarbers(),
 });
 
-// `useQuery` hands back an object of refs, and templates only unwrap top-level
-// bindings: reaching through the query object in markup yields the ref itself,
-// which is always truthy. Flags the template reads get destructured here.
 const { isPending: barbersPending } = barbersQuery;
 
 const servicesQuery = useQuery({
@@ -118,8 +115,6 @@ const agendaQuery = useQuery({
   enabled: agendaEnabled,
 });
 
-// `isLoading`, not `isPending`: a disabled query stays pending forever, which
-// would keep the skeleton up while we wait for a barber to be picked.
 const { isLoading: agendaLoading, isError: agendaFailed } = agendaQuery;
 
 const rows = computed(() => agendaQuery.data.value ?? []);

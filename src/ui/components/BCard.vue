@@ -11,28 +11,38 @@ const props = withDefaults(
 
 const slots = useSlots();
 
-const bodyPadding = computed(() => {
+const hasHeader = computed(() => Boolean(slots.header));
+
+const style = computed(() => {
   if (props.padding === undefined) {
-    return 'var(--b-card-padding)';
+    return undefined;
   }
 
-  return typeof props.padding === 'number' ? `${props.padding}px` : props.padding;
+  const padding = typeof props.padding === 'number' ? `${props.padding}px` : props.padding;
+
+  return { '--b-card-padding': padding };
 });
 </script>
 
 <template>
-  <section class="b-card" :class="slots.header ? 'b-card--with-header' : 'b-card--no-header'">
+  <section
+    class="b-card"
+    :class="hasHeader ? 'b-card--with-header' : 'b-card--no-header'"
+    :style="style"
+    role="region"
+  >
     <header
-      v-if="slots.header"
+      v-if="hasHeader"
       class="b-card__header"
       :class="{ 'b-card__header--no-divider': headerNoDivider }"
     >
       <slot name="header" />
     </header>
 
-    <div v-if="slots.default" class="b-card__body" :style="{ padding: bodyPadding }">
+    <div v-if="hasHeader && slots.default" class="b-card__body">
       <slot />
     </div>
+    <slot v-else />
   </section>
 </template>
 
@@ -44,6 +54,7 @@ const bodyPadding = computed(() => {
 }
 
 .b-card--no-header {
+  padding: var(--b-card-padding);
   background-color: var(--b-card-bg);
 }
 
@@ -68,10 +79,12 @@ const bodyPadding = computed(() => {
 }
 
 .b-card__body {
+  padding: var(--b-card-padding);
   background-color: var(--b-card-bg);
 }
 
 .b-card--with-header .b-card__body {
+  border-top: none;
   border-right: 1px solid var(--b-card-border-color);
   border-bottom: 1px solid var(--b-card-border-color);
   border-left: 1px solid var(--b-card-border-color);
