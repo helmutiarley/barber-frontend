@@ -158,7 +158,7 @@ function margin(priceCents: number, costCents: number | null): string {
                 <th>Custo</th>
                 <th>Margem</th>
                 <th>Estoque</th>
-                <th v-if="canManage" />
+                <th v-if="canManage" class="products__actions-header">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -191,12 +191,14 @@ function margin(priceCents: number, costCents: number | null): string {
                   </div>
                 </td>
                 <td v-if="canManage" class="products__actions">
-                  <RouterLink :to="`/products/${row.id}/stock`">
-                    <BButton size="small" variant="outline" color="neutral">Estoque</BButton>
-                  </RouterLink>
-                  <RouterLink :to="`/products/${row.id}`">
-                    <BButton size="small" variant="outline" color="neutral">Abrir</BButton>
-                  </RouterLink>
+                  <div class="products__actions-content">
+                    <RouterLink :to="`/products/${row.id}/stock`">
+                      <BButton size="small" variant="outline" color="neutral">Estoque</BButton>
+                    </RouterLink>
+                    <RouterLink :to="`/products/${row.id}`">
+                      <BButton size="small" variant="outline" color="neutral">Abrir</BButton>
+                    </RouterLink>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -296,10 +298,18 @@ function margin(priceCents: number, costCents: number | null): string {
   gap: 0.5rem;
 }
 
-.products__actions {
+.products__table .products__actions-header,
+.products__table .products__actions {
+  width: 1%;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.products__actions-content {
   display: flex;
   gap: 0.35rem;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .products__pager {
