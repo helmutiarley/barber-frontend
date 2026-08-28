@@ -62,3 +62,9 @@ export function isBeforeShopToday(iso: string, now: Date = new Date()): boolean 
 
   return openedDay < shopToday(now);
 }
+
+export function isFutureInstant(iso: string, now: Date = new Date()): boolean {
+  const instant = DateTime.fromISO(iso, { zone: 'utc' });
+
+  return instant.isValid && instant.toMillis() > now.getTime();
+}

@@ -12,7 +12,7 @@ import {
   useBToast,
 } from '@/ui';
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import {
   cancelAppointment,
@@ -50,7 +50,7 @@ import { PAYMENT_METHOD_LABELS } from '@/features/payments/method-labels';
 import { ApiError, messageForApiError } from '@/lib/errors';
 import { formatMoney } from '@/lib/money';
 import type { UserRole } from '@/lib/roles';
-import { formatShopDateTime, shopToday } from '@/lib/shop-time';
+import { formatShopDateTime, isFutureInstant, shopToday } from '@/lib/shop-time';
 import { useAuthStore } from '@/stores/auth';
 import { useCashRegisterStore } from '@/stores/cash-register';
 
@@ -67,9 +67,19 @@ const id = computed(() => String(route.params.id));
 const isStaff = computed(() => hasRole('ADMIN') || hasRole('MANAGER'));
 const isClient = computed(() => hasRole('CLIENT'));
 const canOpenClient = computed(() => isStaff.value || hasRole('BARBER'));
+const currentTime = ref(Date.now());
+const minimumDate = computed(() => shopToday(new Date(currentTime.value)));
+let currentTimeTimer: ReturnType<typeof setInterval> | undefined;
 
 onMounted(() => {
   void cash.refresh();
+  currentTimeTimer = setInterval(() => {
+    currentTime.value = Date.now();
+  }, 1_000);
+});
+
+onUnmounted(() => {
+  clearInterval(currentTimeTimer);
 });
 
 const detailQuery = useQuery({
@@ -300,12 +310,16 @@ const slotsQuery = useQuery({
 
 const { isLoading: slotsLoading } = slotsQuery;
 
-const slotOptions = computed(() =>
-  (slotsQuery.data.value?.slots ?? []).map((iso) => ({
-    label: formatShopDateTime(iso, 'HH:mm'),
-    value: iso,
-  })),
-);
+const slotOptions = computed(() => {
+  const now = new Date(currentTime.value);
+
+  return (slotsQuery.data.value?.slots ?? [])
+    .filter((iso) => isFutureInstant(iso, now))
+    .map((iso) => ({
+      label: formatShopDateTime(iso, 'HH:mm'),
+      value: iso,
+    }));
+});
 
 watch(slotOptions, (options) => {
   if (!options.some((o) => o.value === rescheduleForm.startsAt)) {
@@ -588,6 +602,7 @@ const ownerHint = computed(() => {
           type="date"
           label="Data"
           label-prepend-asterisk
+          :min="minimumDate"
           :helper-text="rescheduleErrors.date"
         />
         <BSelect

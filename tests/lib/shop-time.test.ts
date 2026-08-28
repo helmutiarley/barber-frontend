@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   formatShopDateTime,
   isBeforeShopToday,
+  isFutureInstant,
   shopDayEndUtcIso,
   shopDayStartUtcIso,
   shopToday,
@@ -38,6 +39,15 @@ describe('shop-time', () => {
     }).toJSDate();
     expect(isBeforeShopToday('2024-06-01T18:00:00.000Z', now)).toBe(true);
     expect(isBeforeShopToday('2024-06-02T10:00:00.000Z', now)).toBe(false);
+  });
+
+  it('isFutureInstant rejects past, present and invalid values', () => {
+    const now = new Date('2024-06-01T15:30:00.000Z');
+
+    expect(isFutureInstant('2024-06-01T15:31:00.000Z', now)).toBe(true);
+    expect(isFutureInstant('2024-06-01T15:30:00.000Z', now)).toBe(false);
+    expect(isFutureInstant('2024-06-01T15:29:00.000Z', now)).toBe(false);
+    expect(isFutureInstant('invalid', now)).toBe(false);
   });
 
   it('shop day bounds cover the local calendar day in UTC', () => {

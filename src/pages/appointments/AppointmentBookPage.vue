@@ -9,7 +9,7 @@ import {
   useBToast,
 } from '@/ui';
 import { useQuery } from '@tanstack/vue-query';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { createAppointment } from '@/api/appointments';
 import { getAvailability, listBarbers } from '@/api/barbers';
@@ -27,7 +27,12 @@ import {
 } from '@/features/appointments/schemas';
 import { ApiError, messageForApiError } from '@/lib/errors';
 import { formatMoney } from '@/lib/money';
-import { formatShopDateTime, shopLocalToUtcIso, shopToday } from '@/lib/shop-time';
+import {
+  formatShopDateTime,
+  isFutureInstant,
+  shopLocalToUtcIso,
+  shopToday,
+} from '@/lib/shop-time';
 
 const props = withDefaults(
   defineProps<{
@@ -62,6 +67,19 @@ const form = reactive({
 const fieldErrors = ref<Record<string, string>>({});
 const formError = ref<string | null>(null);
 const pending = ref(false);
+const currentTime = ref(Date.now());
+const minimumDate = computed(() => shopToday(new Date(currentTime.value)));
+let currentTimeTimer: ReturnType<typeof setInterval> | undefined;
+
+onMounted(() => {
+  currentTimeTimer = setInterval(() => {
+    currentTime.value = Date.now();
+  }, 1_000);
+});
+
+onUnmounted(() => {
+  clearInterval(currentTimeTimer);
+});
 
 const servicesQuery = useQuery({
   queryKey: ['services', { includeInactive: false }] as const,
@@ -167,12 +185,16 @@ const availabilityQuery = useQuery({
 
 const { isLoading: availabilityLoading } = availabilityQuery;
 
-const slotOptions = computed(() =>
-  (availabilityQuery.data.value?.slots ?? []).map((iso) => ({
-    label: formatShopDateTime(iso, 'HH:mm'),
-    value: iso,
-  })),
-);
+const slotOptions = computed(() => {
+  const now = new Date(currentTime.value);
+
+  return (availabilityQuery.data.value?.slots ?? [])
+    .filter((iso) => isFutureInstant(iso, now))
+    .map((iso) => ({
+      label: formatShopDateTime(iso, 'HH:mm'),
+      value: iso,
+    }));
+});
 
 watch(slotOptions, (options) => {
   if (!options.some((o) => o.value === form.startsAt)) {
@@ -315,6 +337,7 @@ async function onSubmit(): Promise<void> {
             type="date"
             label="Data"
             label-prepend-asterisk
+            :min="minimumDate"
             :helper-text="fieldErrors.date"
           />
           <BSelect
