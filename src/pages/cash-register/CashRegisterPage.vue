@@ -82,6 +82,10 @@ const pending = ref(false);
 
 const movements = computed(() => detailQuery.data.value?.movements ?? []);
 
+const openedAtLabel = computed(() =>
+  current.value ? `Aberto em ${formatShopDateTime(current.value.session.openedAt)}` : undefined,
+);
+
 const methodRows = computed(() =>
   (current.value?.totals.byMethod ?? []).filter(
     (row) => row.inCents !== 0 || row.outCents !== 0,
@@ -128,10 +132,7 @@ async function onMovement(): Promise<void> {
 </script>
 
 <template>
-  <PageLayout
-    title="Caixa"
-    subtitle="Tudo que a barbearia recebeu no dia, em qualquer forma. O saldo esperado conta só a gaveta."
-  >
+  <PageLayout title="Caixa" :subtitle="openedAtLabel">
     <template #header-actions>
       <RouterLink to="/cash-register/sessions">
         <BButton variant="outline" color="neutral">Histórico</BButton>
@@ -165,17 +166,11 @@ async function onMovement(): Promise<void> {
           <BText as="span" variant="heading-2">
             {{ formatMoney(current.session.openingBalanceCents) }}
           </BText>
-          <BText as="span" variant="body-3" color="b-fg-neutral-secondary">
-            {{ formatShopDateTime(current.session.openedAt) }}
-          </BText>
         </BCard>
         <BCard class="cash__stat">
           <BText as="span" variant="body-3" color="b-fg-neutral-secondary">Entradas</BText>
           <BText as="span" variant="heading-2">
             {{ formatMoney(current.totals.inCents) }}
-          </BText>
-          <BText as="span" variant="body-3" color="b-fg-neutral-secondary">
-            Todas as formas de pagamento
           </BText>
         </BCard>
         <BCard class="cash__stat">
@@ -189,23 +184,11 @@ async function onMovement(): Promise<void> {
           <BText as="span" variant="heading-2">
             {{ formatMoney(current.totals.expectedBalanceCents) }}
           </BText>
-          <BText as="span" variant="body-3" color="b-fg-neutral-secondary">
-            Só dinheiro: {{ formatMoney(current.totals.cashInCents) }} entrou,
-            {{ formatMoney(current.totals.cashOutCents) }} saiu
-          </BText>
         </BCard>
       </div>
 
-      <SectionCard
-        title="Por forma de pagamento"
-        subtitle="Descritivo do que foi apurado. Só o dinheiro entra na contagem do fechamento."
-        class="cash__methods"
-      >
-        <BEmptyState
-          v-if="methodRows.length === 0"
-          title="Nada recebido ainda"
-          subtitle="Pagamentos de agendamentos e vendas aparecem aqui assim que forem registrados."
-        />
+      <SectionCard title="Por forma de pagamento" class="cash__methods">
+        <BEmptyState v-if="methodRows.length === 0" title="Nada recebido ainda" />
         <div v-else class="cash__ledger-wrap">
           <table class="cash__ledger">
             <thead>
