@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { BButton, BInput, BText, useBToast } from '@/ui';
+import { useQueryClient } from '@tanstack/vue-query';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { openSession } from '@/api/cash-register';
@@ -12,6 +13,7 @@ import { useCashRegisterStore } from '@/stores/cash-register';
 
 const router = useRouter();
 const toast = useBToast();
+const queryClient = useQueryClient();
 const cash = useCashRegisterStore();
 
 const form = reactive({ openingBalanceText: '0,00' });
@@ -33,6 +35,7 @@ async function onSubmit(): Promise<void> {
   try {
     await openSession({ openingBalanceCents: parsed.data.openingBalanceText });
     toast.add({ message: 'Caixa aberto.', severity: 'success' });
+    await queryClient.invalidateQueries({ queryKey: ['cash-register'] });
     await cash.refresh();
     await router.push('/cash-register');
   } catch (error) {

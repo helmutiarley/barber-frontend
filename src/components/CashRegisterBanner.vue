@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { BButton, BIcon, BText } from '@/ui';
 import { computed } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
 import { useCashRegisterStore } from '@/stores/cash-register';
 
 const cash = useCashRegisterStore();
+const route = useRoute();
 
 const showClosed = computed(() => cash.status === 'closed');
 const showOvernight = computed(() => cash.isOvernightOpen);
+const showCashRegisterLink = computed(() => !route.path.startsWith('/cash-register'));
 </script>
 
 <template>
@@ -15,10 +17,10 @@ const showOvernight = computed(() => cash.isOvernightOpen);
     <div class="banner__message">
       <BIcon name="ic-warning-circle-16" dimensions="16px" />
       <BText as="span" variant="body-2">
-        O caixa está fechado. Abra o caixa para registrar pagamentos em dinheiro.
+        O caixa está fechado. Abra o caixa para registrar pagamentos/recebimentos.
       </BText>
     </div>
-    <RouterLink to="/cash-register">
+    <RouterLink v-if="showCashRegisterLink" to="/cash-register">
       <BButton size="small" variant="outline" color="neutral">Ir para o caixa</BButton>
     </RouterLink>
   </div>
@@ -43,6 +45,7 @@ const showOvernight = computed(() => cash.isOvernightOpen);
   align-items: center;
   justify-content: space-between;
   gap: var(--b-spacing-2xs);
+  min-height: 49px;
   padding: var(--b-spacing-2xs) var(--b-spacing-sm);
   border-bottom: 1px solid var(--b-stroke-default);
 }

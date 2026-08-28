@@ -8,7 +8,7 @@ import {
   BText,
   useBToast,
 } from '@/ui';
-import { useQuery } from '@tanstack/vue-query';
+import { useQuery, useQueryClient } from '@tanstack/vue-query';
 import { computed, reactive, ref, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { closeSession, getCurrentSession } from '@/api/cash-register';
@@ -23,6 +23,7 @@ import { useCashRegisterStore } from '@/stores/cash-register';
 
 const router = useRouter();
 const toast = useBToast();
+const queryClient = useQueryClient();
 const cash = useCashRegisterStore();
 
 const currentQuery = useQuery({
@@ -104,6 +105,8 @@ async function onSubmit(): Promise<void> {
       notes: parsed.data.notes.trim() || undefined,
     });
     toast.add({ message: 'Caixa fechado.', severity: 'success' });
+    queryClient.setQueryData(['cash-register', 'current'], null);
+    await queryClient.invalidateQueries({ queryKey: ['cash-register'] });
     await cash.refresh();
     await router.push('/cash-register');
   } catch (error) {
