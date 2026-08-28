@@ -22,6 +22,7 @@ import {
 import PageLayout from '@/components/layout/PageLayout.vue';
 import SectionCard from '@/components/layout/SectionCard.vue';
 import {
+  DISCOUNT_REASON_LABELS,
   MANUAL_MOVEMENT_OPTIONS,
   MOVEMENT_SOURCE_LABELS,
   MOVEMENT_TYPE_LABELS,
@@ -88,7 +89,7 @@ const openedAtLabel = computed(() =>
 
 const methodRows = computed(() =>
   (current.value?.totals.byMethod ?? []).filter(
-    (row) => row.inCents !== 0 || row.outCents !== 0,
+    (row) => row.inCents !== 0 || row.outCents !== 0 || row.discountCents !== 0,
   ),
 );
 
@@ -168,7 +169,9 @@ async function onMovement(): Promise<void> {
           </BText>
         </BCard>
         <BCard class="cash__stat">
-          <BText as="span" variant="body-3" color="b-fg-neutral-secondary">Entradas</BText>
+          <BText as="span" variant="body-3" color="b-fg-neutral-secondary">
+            Entradas líquidas
+          </BText>
           <BText as="span" variant="heading-2">
             {{ formatMoney(current.totals.inCents) }}
           </BText>
@@ -194,16 +197,16 @@ async function onMovement(): Promise<void> {
             <thead>
               <tr>
                 <th>Forma</th>
-                <th>Entradas</th>
-                <th>Saídas</th>
-                <th>Líquido</th>
+                <th>Bruto</th>
+                <th>Descontos</th>
+                <th>Saldo líquido</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="row in methodRows" :key="row.method">
                 <td>{{ PAYMENT_METHOD_LABELS[row.method] }}</td>
-                <td>{{ formatMoney(row.inCents) }}</td>
-                <td>{{ formatMoney(row.outCents) }}</td>
+                <td>{{ formatMoney(row.netCents + row.discountCents) }}</td>
+                <td>{{ row.discountCents ? formatMoney(row.discountCents) : '—' }}</td>
                 <td>{{ formatMoney(row.netCents) }}</td>
               </tr>
             </tbody>
@@ -265,7 +268,9 @@ async function onMovement(): Promise<void> {
                 <th>Tipo</th>
                 <th>Origem</th>
                 <th>Forma</th>
-                <th>Valor</th>
+                <th>Valor líquido</th>
+                <th>Desconto</th>
+                <th>Motivo</th>
                 <th>Descrição</th>
               </tr>
             </thead>
@@ -280,6 +285,10 @@ async function onMovement(): Promise<void> {
                 <td>{{ MOVEMENT_SOURCE_LABELS[row.source] }}</td>
                 <td>{{ PAYMENT_METHOD_LABELS[row.method] }}</td>
                 <td>{{ formatMoney(row.amountCents) }}</td>
+                <td>{{ row.discountCents ? formatMoney(row.discountCents) : '—' }}</td>
+                <td>
+                  {{ row.discountReason ? DISCOUNT_REASON_LABELS[row.discountReason] : '—' }}
+                </td>
                 <td>{{ row.description || '—' }}</td>
               </tr>
             </tbody>

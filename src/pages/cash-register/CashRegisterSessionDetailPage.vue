@@ -14,9 +14,11 @@ import PageBackLink from '@/components/layout/PageBackLink.vue';
 import PageLayout from '@/components/layout/PageLayout.vue';
 import SectionCard from '@/components/layout/SectionCard.vue';
 import {
+  DISCOUNT_REASON_LABELS,
   MOVEMENT_SOURCE_LABELS,
   MOVEMENT_TYPE_LABELS,
 } from '@/features/cash-register/labels';
+import { PAYMENT_METHOD_LABELS } from '@/features/payments/method-labels';
 import { formatMoney } from '@/lib/money';
 import { formatShopDateTime } from '@/lib/shop-time';
 
@@ -113,7 +115,10 @@ const movements = computed(() => detailQuery.data.value?.movements ?? []);
                 <th>Quando</th>
                 <th>Tipo</th>
                 <th>Origem</th>
-                <th>Valor</th>
+                <th>Forma</th>
+                <th>Valor líquido</th>
+                <th>Desconto</th>
+                <th>Motivo</th>
                 <th>Descrição</th>
               </tr>
             </thead>
@@ -126,7 +131,12 @@ const movements = computed(() => detailQuery.data.value?.movements ?? []);
                   </BLabel>
                 </td>
                 <td>{{ MOVEMENT_SOURCE_LABELS[row.source] }}</td>
+                <td>{{ PAYMENT_METHOD_LABELS[row.method] }}</td>
                 <td>{{ formatMoney(row.amountCents) }}</td>
+                <td>{{ row.discountCents ? formatMoney(row.discountCents) : '—' }}</td>
+                <td>
+                  {{ row.discountReason ? DISCOUNT_REASON_LABELS[row.discountReason] : '—' }}
+                </td>
                 <td>{{ row.description || '—' }}</td>
               </tr>
             </tbody>

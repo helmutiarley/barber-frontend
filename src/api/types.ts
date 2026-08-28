@@ -34,16 +34,17 @@ export interface MethodTotalsDto {
   method: PaymentMethod;
   inCents: number;
   outCents: number;
+  discountCents: number;
   netCents: number;
 }
 
 export interface CurrentSessionDto {
   session: SessionDto;
+  pendingAppointmentsCount: number;
   totals: {
-    /** Everything taken in the session, whatever the method. */
     inCents: number;
     outCents: number;
-    /** The drawer alone — what the closing count is measured against. */
+    discountCents: number;
     cashInCents: number;
     cashOutCents: number;
     expectedBalanceCents: number;
@@ -52,6 +53,7 @@ export interface CurrentSessionDto {
 }
 
 export type CashMovementType = 'in' | 'out';
+export type CashMovementDiscountReason = 'card_processing_fee';
 
 export type CashMovementSource =
   | 'payment'
@@ -71,6 +73,8 @@ export interface CashMovementDto {
   source: CashMovementSource;
   method: PaymentMethod;
   amountCents: number;
+  discountCents: number;
+  discountReason: CashMovementDiscountReason | null;
   paymentId: string | null;
   expenseId: string | null;
   advanceId: string | null;

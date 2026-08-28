@@ -1,4 +1,9 @@
-import type { CashMovementSource, CashMovementType, ManualCashMovementSource } from '@/api/types';
+import type {
+  CashMovementDiscountReason,
+  CashMovementSource,
+  CashMovementType,
+  ManualCashMovementSource,
+} from '@/api/types';
 
 export const MOVEMENT_TYPE_LABELS: Record<CashMovementType, string> = {
   in: 'Entrada',
@@ -13,6 +18,10 @@ export const MOVEMENT_SOURCE_LABELS: Record<CashMovementSource, string> = {
   advance: 'Vale',
   payout: 'Comissão',
   adjustment: 'Ajuste',
+};
+
+export const DISCOUNT_REASON_LABELS: Record<CashMovementDiscountReason, string> = {
+  card_processing_fee: 'Taxa de processamento do cartão',
 };
 
 /** UI presets — maps to API `type` + `source`. */

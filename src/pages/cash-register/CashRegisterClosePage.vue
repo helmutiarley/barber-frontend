@@ -18,6 +18,7 @@ import SectionCard from '@/components/layout/SectionCard.vue';
 import { closeSessionFormSchema, fieldErrorsFromZod } from '@/features/cash-register/schemas';
 import { ApiError, messageForApiError } from '@/lib/errors';
 import { formatMoney, parseMoneyInput } from '@/lib/money';
+import { shopToday } from '@/lib/shop-time';
 import { useCashRegisterStore } from '@/stores/cash-register';
 
 const router = useRouter();
@@ -33,6 +34,18 @@ const { isPending: currentPending } = currentQuery;
 
 const current = computed(() => currentQuery.data.value ?? null);
 const expected = computed(() => current.value?.totals.expectedBalanceCents ?? 0);
+const pendingAppointmentsCount = computed(() => current.value?.pendingAppointmentsCount ?? 0);
+const hasPendingAppointments = computed(() => pendingAppointmentsCount.value > 0);
+const appointmentsRoute = {
+  path: '/appointments',
+  query: { from: shopToday(), to: shopToday() },
+};
+const pendingAppointmentsMessage = computed(() => {
+  const count = pendingAppointmentsCount.value;
+  const quantity = count === 1 ? 'Existe 1 agendamento pendente.' : `Existem ${count} agendamentos pendentes.`;
+
+  return `${quantity} Verifique os agendamentos e finalize o recebimento e a conclusão antes de fechar o caixa.`;
+});
 
 const form = reactive({
   countedBalanceText: '',
@@ -41,6 +54,14 @@ const form = reactive({
 const fieldErrors = ref<Record<string, string>>({});
 const formError = ref<string | null>(null);
 const pending = ref(false);
+
+function isPendingAppointmentsError(error: unknown): boolean {
+  if (!(error instanceof ApiError) || typeof error.details !== 'object' || error.details === null) {
+    return false;
+  }
+
+  return (error.details as { reason?: unknown }).reason === 'PENDING_APPOINTMENTS';
+}
 
 watch(
   current,
@@ -86,8 +107,16 @@ async function onSubmit(): Promise<void> {
     await cash.refresh();
     await router.push('/cash-register');
   } catch (error) {
-    const message =
-      error instanceof ApiError ? messageForApiError(error) : 'Não foi possível fechar.';
+    const blockedByAppointments = isPendingAppointmentsError(error);
+    if (blockedByAppointments) {
+      await currentQuery.refetch();
+    }
+
+    const message = blockedByAppointments
+      ? 'Verifique os agendamentos de hoje e finalize o recebimento e a conclusão antes de fechar o caixa.'
+      : error instanceof ApiError
+        ? messageForApiError(error)
+        : 'Não foi possível fechar.';
     formError.value = message;
     toast.add({ message, severity: 'failure' });
   } finally {
@@ -148,6 +177,15 @@ async function onSubmit(): Promise<void> {
         </dl>
       </SectionCard>
 
+      <SectionCard v-if="hasPendingAppointments" title="Agendamentos pendentes">
+        <BText as="p" variant="body-2" class="close__warning" role="alert">
+          {{ pendingAppointmentsMessage }}
+        </BText>
+        <RouterLink :to="appointmentsRoute">
+          <BButton color="neutral" variant="outline">Ver agendamentos</BButton>
+        </RouterLink>
+      </SectionCard>
+
       <SectionCard title="Contagem">
         <div class="close__fields">
           <BInput
@@ -180,7 +218,13 @@ async function onSubmit(): Promise<void> {
         {{ formError }}
       </BText>
 
-      <BButton type="submit" color="neutral" variant="contain" :is-loading="pending">
+      <BButton
+        type="submit"
+        color="neutral"
+        variant="contain"
+        :is-loading="pending"
+        :is-disabled="hasPendingAppointments"
+      >
         Fechar caixa
       </BButton>
     </form>
@@ -227,6 +271,10 @@ async function onSubmit(): Promise<void> {
 .close__diff--nonzero {
   color: var(--b-fg-warning-default, #b54708);
   font-weight: 600;
+}
+
+.close__warning {
+  margin-bottom: 0.75rem;
 }
 
 .close__error {
