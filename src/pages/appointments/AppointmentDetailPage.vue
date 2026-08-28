@@ -25,6 +25,7 @@ import {
 import { getAvailability, listBarbers } from '@/api/barbers';
 import { activePaidCents, listAppointmentPayments } from '@/api/payments';
 import { listServices } from '@/api/services';
+import AppointmentPaymentLabel from '@/components/AppointmentPaymentLabel.vue';
 import PageBackLink from '@/components/layout/PageBackLink.vue';
 import PageLayout from '@/components/layout/PageLayout.vue';
 import SectionCard from '@/components/layout/SectionCard.vue';
@@ -407,6 +408,12 @@ const ownerHint = computed(() => {
               <BLabel :color="APPOINTMENT_STATUS_COLORS[appointment.status]">
                 {{ APPOINTMENT_STATUS_LABELS[appointment.status] }}
               </BLabel>
+            </dd>
+          </div>
+          <div>
+            <dt>Pagamento</dt>
+            <dd>
+              <AppointmentPaymentLabel :is-paid="appointment.isPaid" />
             </dd>
           </div>
           <div>

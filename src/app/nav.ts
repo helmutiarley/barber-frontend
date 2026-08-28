@@ -5,6 +5,7 @@ export type NavItem = {
   label: string;
   icon: string;
   roles: UserRole[];
+  activePaths?: string[];
 };
 
 export type NavSection = {
@@ -22,12 +23,12 @@ export const staffNavSections: NavSection[] = [
   {
     id: 'main',
     items: [
-      { path: '/agenda', label: 'Agenda', icon: 'ic-calendar-24', roles: STAFF },
       {
-        path: '/appointments',
-        label: 'Agendamentos',
-        icon: 'ic-clock-circle-24',
-        roles: MANAGEMENT,
+        path: '/agenda',
+        label: 'Agenda',
+        icon: 'ic-calendar-24',
+        roles: STAFF,
+        activePaths: ['/appointments'],
       },
       { path: '/clients', label: 'Clientes', icon: 'ic-person-24', roles: MANAGEMENT },
     ],

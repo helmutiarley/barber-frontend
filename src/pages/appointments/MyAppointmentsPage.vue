@@ -13,6 +13,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { listMyAppointments } from '@/api/appointments';
 import { listBarbers } from '@/api/barbers';
 import { listServices } from '@/api/services';
+import AppointmentPaymentLabel from '@/components/AppointmentPaymentLabel.vue';
 import PageLayout from '@/components/layout/PageLayout.vue';
 import {
   APPOINTMENT_STATUS_COLORS,
@@ -114,6 +115,7 @@ function setOffset(next: number): void {
               </BText>
             </div>
             <div class="mine__side">
+              <AppointmentPaymentLabel :is-paid="row.isPaid" />
               <BLabel :color="APPOINTMENT_STATUS_COLORS[row.status]">
                 {{ APPOINTMENT_STATUS_LABELS[row.status] }}
               </BLabel>

@@ -157,6 +157,7 @@ export interface AppointmentDto {
   barberId: string;
   serviceId: string;
   status: AppointmentStatus;
+  isPaid: boolean;
   startsAt: string;
   endsAt: string;
   priceCents: number;

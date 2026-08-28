@@ -14,6 +14,7 @@ function appointment(overrides: Partial<AppointmentDto> = {}): AppointmentDto {
     barberId: 'b1',
     serviceId: 's1',
     status: 'scheduled',
+    isPaid: false,
     startsAt: '2030-06-01T15:00:00.000Z',
     endsAt: '2030-06-01T15:30:00.000Z',
     priceCents: 4500,

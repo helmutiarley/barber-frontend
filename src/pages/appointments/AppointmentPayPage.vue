@@ -157,7 +157,9 @@ async function onSubmit(): Promise<void> {
       })),
     );
     toast.add({ message: 'Pagamento registrado.', severity: 'success' });
-    await queryClient.invalidateQueries({ queryKey: ['appointments', id.value, 'payments'] });
+    await queryClient.invalidateQueries({ queryKey: ['appointments'] });
+    await queryClient.invalidateQueries({ queryKey: ['agenda'] });
+    await queryClient.invalidateQueries({ queryKey: ['my-appointments'] });
     await queryClient.invalidateQueries({ queryKey: ['payments'] });
     await queryClient.invalidateQueries({ queryKey: ['cash-register'] });
     await cash.refresh();

@@ -16,6 +16,8 @@ import { listAppointments } from '@/api/appointments';
 import { listBarbers } from '@/api/barbers';
 import { listServices } from '@/api/services';
 import type { AppointmentStatus } from '@/api/types';
+import AppointmentPaymentLabel from '@/components/AppointmentPaymentLabel.vue';
+import AppointmentsTabs from '@/components/AppointmentsTabs.vue';
 import PageLayout from '@/components/layout/PageLayout.vue';
 import {
   APPOINTMENT_STATUS_COLORS,
@@ -172,14 +174,16 @@ function setOffset(next: number): void {
 
 <template>
   <PageLayout
-    title="Agendamentos"
-    subtitle="Lista por período (máx. 92 dias). Filtros ficam na URL."
+    title="Agenda"
+    subtitle="Consulte agendamentos por período, barbeiro e status."
   >
     <template #header-actions>
       <RouterLink to="/appointments/new">
         <BButton color="neutral" variant="contain" icon-prepend="ic-add-16">Novo horário</BButton>
       </RouterLink>
     </template>
+
+    <AppointmentsTabs />
 
     <BCard class="list__filters">
       <div class="list__filters-row">
@@ -234,6 +238,7 @@ function setOffset(next: number): void {
                 <th>Serviço</th>
                 <th>Valor</th>
                 <th>Status</th>
+                <th>Pagamento</th>
                 <th />
               </tr>
             </thead>
@@ -251,6 +256,9 @@ function setOffset(next: number): void {
                   <BLabel :color="APPOINTMENT_STATUS_COLORS[row.status]">
                     {{ APPOINTMENT_STATUS_LABELS[row.status] }}
                   </BLabel>
+                </td>
+                <td>
+                  <AppointmentPaymentLabel :is-paid="row.isPaid" />
                 </td>
                 <td>
                   <RouterLink :to="`/appointments/${row.id}`">

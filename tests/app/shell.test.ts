@@ -75,6 +75,19 @@ describe('staff shell', () => {
     app.unmount();
   });
 
+  it('keeps Agenda active while management uses the consultation tab', async () => {
+    const { app, host } = await mountStaffShell('/appointments');
+
+    const active = [...host.querySelectorAll('.nav-item__link--active')];
+    expect(active).toHaveLength(1);
+    expect(active[0]?.getAttribute('href')).toBe('/agenda');
+    expect(host.querySelector('.drawer a[href="/appointments"]')).toBeNull();
+    expect(host.textContent).toContain('Dia');
+    expect(host.textContent).toContain('Consulta');
+
+    app.unmount();
+  });
+
   it('wraps page content in the shared page layout', async () => {
     const { app, host } = await mountStaffShell('/users');
 

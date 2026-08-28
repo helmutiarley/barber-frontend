@@ -179,6 +179,9 @@ async function submitVoid(): Promise<void> {
     toast.add({ message: 'Pagamento estornado.', severity: 'success' });
     voidTarget.value = null;
     await queryClient.invalidateQueries({ queryKey: ['payments'] });
+    await queryClient.invalidateQueries({ queryKey: ['appointments'] });
+    await queryClient.invalidateQueries({ queryKey: ['agenda'] });
+    await queryClient.invalidateQueries({ queryKey: ['my-appointments'] });
   } catch (error) {
     toast.add({
       message: error instanceof ApiError ? messageForApiError(error) : 'Falha ao estornar.',

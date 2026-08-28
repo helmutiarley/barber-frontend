@@ -8,8 +8,10 @@ const props = defineProps<{ item: NavItem }>();
 
 const route = useRoute();
 
-const isActive = computed(
-  () => route.path === props.item.path || route.path.startsWith(`${props.item.path}/`),
+const isActive = computed(() =>
+  [props.item.path, ...(props.item.activePaths ?? [])].some(
+    (path) => route.path === path || route.path.startsWith(`${path}/`),
+  ),
 );
 </script>
 

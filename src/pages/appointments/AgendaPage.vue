@@ -21,6 +21,8 @@ import {
 import { listBarbers } from '@/api/barbers';
 import { listServices } from '@/api/services';
 import type { AppointmentDto } from '@/api/types';
+import AppointmentPaymentLabel from '@/components/AppointmentPaymentLabel.vue';
+import AppointmentsTabs from '@/components/AppointmentsTabs.vue';
 import PageLayout from '@/components/layout/PageLayout.vue';
 import { useOwnBarberId } from '@/composables/useOwnBarberId';
 import { usePermission } from '@/composables/usePermission';
@@ -214,13 +216,15 @@ function shiftDay(delta: number): void {
 <template>
   <PageLayout
     title="Agenda"
-    subtitle="Dia do barbeiro no fuso da loja. Cancelados e faltas explicam os buracos."
+    subtitle="Acompanhe e atualize os atendimentos do dia."
   >
     <template v-if="canBook" #header-actions>
       <RouterLink to="/appointments/new">
         <BButton color="neutral" variant="contain" icon-prepend="ic-add-16">Novo horário</BButton>
       </RouterLink>
     </template>
+
+    <AppointmentsTabs />
 
     <BCard class="agenda__filters">
       <div class="agenda__filters-row">
@@ -308,6 +312,7 @@ function shiftDay(delta: number): void {
               <th>Serviço</th>
               <th>Valor</th>
               <th>Status</th>
+              <th>Pagamento</th>
               <th />
             </tr>
           </thead>
@@ -334,6 +339,9 @@ function shiftDay(delta: number): void {
                 <BLabel :color="APPOINTMENT_STATUS_COLORS[row.status]">
                   {{ APPOINTMENT_STATUS_LABELS[row.status] }}
                 </BLabel>
+              </td>
+              <td>
+                <AppointmentPaymentLabel :is-paid="row.isPaid" />
               </td>
               <td class="agenda__actions">
                 <RouterLink :to="`/appointments/${row.id}`">

@@ -23,6 +23,7 @@ const APPOINTMENT: AppointmentDto = {
   barberId: BARBER_ID,
   serviceId: 'service-1',
   status: 'scheduled',
+  isPaid: false,
   startsAt: '2026-08-07T13:00:00.000Z',
   endsAt: '2026-08-07T13:30:00.000Z',
   priceCents: 5000,
@@ -106,7 +107,17 @@ describe('agenda page', () => {
     const { app, host } = await mountAgenda([APPOINTMENT]);
 
     await vi.waitFor(() => expect(host.textContent).toContain('Corte degradê'));
+    expect(host.textContent).toContain('Não pago');
     expect(host.querySelector('[class*="skeleton"]')).toBeNull();
+
+    app.unmount();
+  });
+
+  it('shows paid appointments as paid', async () => {
+    const { app, host } = await mountAgenda([{ ...APPOINTMENT, isPaid: true }]);
+
+    await vi.waitFor(() => expect(host.textContent).toContain('Pago'));
+    expect(host.textContent).not.toContain('Não pago');
 
     app.unmount();
   });
